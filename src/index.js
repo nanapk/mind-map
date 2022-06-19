@@ -93,8 +93,17 @@ const cy = cytoscape({
 });
 
 let bTapHold = false;
+function isNode(e) {
+    if (e.target.position == undefined)
+        return false; // background
+    else if (e.target.data('id').length != 1)
+        return false; // edge
+    return true; // node!!
+}
 
 cy.on('tap', function (e) {
+    if (!isNode(e)) return;
+
     if (bTapHold) {
         bTapHold = false;
         return;
@@ -103,8 +112,6 @@ cy.on('tap', function (e) {
         alert("더 이상 추가할 수 없습니다.");
         return;
     }
-
-    console.log(e.target);
 
     const parentId = e.target.data('id');
     const parentPos = e.target.position();
@@ -133,6 +140,8 @@ cy.on('tap', function (e) {
 });
 
 cy.on('taphold', function (e) {
+    if (!isNode(e)) return;
+
     const myId = e.target.data('id');
     let count = 0;
     e.target.connectedEdges().forEach(function (target) {
