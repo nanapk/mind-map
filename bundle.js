@@ -24,11 +24,15 @@ cytoscape__WEBPACK_IMPORTED_MODULE_0___default().use((cytoscape_cose_bilkent__WE
 var data = [{
   data: {
     id: 'A',
+    pv: '20',
+    // 만 단위
     label: 'A'
   }
 }, {
   data: {
     id: 'B',
+    pv: '20',
+    // 만 단위
     label: 'B'
   }
 }, {
@@ -40,6 +44,8 @@ var data = [{
 }, {
   data: {
     id: 'C',
+    pv: '20',
+    // 만 단위
     label: 'C'
   }
 }, {
@@ -106,6 +112,18 @@ function isNode(e) {
 cy.on('tap', function (e) {
   if (!isNode(e)) return;
 
+  if (e.target === curSel) {
+    resetFocus(e.target);
+    curSel = null;
+  } else {
+    if (curSel != null) resetFocus(curSel);
+    setFocus(e.target);
+    curSel = e.target;
+  }
+
+  (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, curSel);
+  return;
+
   if (bTapHold) {
     bTapHold = false;
     return;
@@ -123,6 +141,8 @@ cy.on('tap', function (e) {
     group: 'nodes',
     data: {
       id: newId,
+      pv: '20',
+      // 만 단위
       label: newId
     },
     position: {
@@ -164,6 +184,16 @@ window.addEventListener('resize', function () {
   }, 200);
 });
 (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.makingFirstBonusChart)();
+var curSel = null;
+var nodeActiveColor = '#ffa502';
+
+function setFocus(target_element) {
+  target_element.style('background-color', nodeActiveColor);
+}
+
+function resetFocus(target_element) {
+  target_element.style('background-color', nodeColor);
+}
 
 /***/ }),
 /* 1 */
@@ -10308,7 +10338,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "makingFirstBonusChart": () => /* binding */ makingFirstBonusChart
+/* harmony export */   "makingFirstBonusChart": () => /* binding */ makingFirstBonusChart,
+/* harmony export */   "applyTargetBonus": () => /* binding */ applyTargetBonus
 /* harmony export */ });
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(10);
 
@@ -10318,7 +10349,7 @@ function makingFirstBonusChart() {
     var wrapper = document.createElement('div');
     wrapper.classList.add('first-bonus-item');
     var bonusTotal = document.createElement('div');
-    bonusTotal.innerText = "".concat(bonusData.total, "PV");
+    bonusTotal.innerText = "".concat(bonusData.total, "\uB9CCPV");
     bonusTotal.classList.add('bonus-total');
     var bonusPercentage = document.createElement('div');
     bonusPercentage.innerText = "".concat(bonusData.percentage, "%");
@@ -10326,6 +10357,38 @@ function makingFirstBonusChart() {
     wrapper.appendChild(bonusTotal);
     wrapper.appendChild(bonusPercentage);
     firstBonusChartDiv.appendChild(wrapper);
+  });
+}
+var totalPv = 0;
+function applyTargetBonus(cy, element) {
+  if (cy == null || element == null) {
+    var _curSelDiv = document.querySelector('.cur-sel');
+
+    _curSelDiv.innerHTML = '없음';
+
+    var _curPvDiv = document.querySelector('.cur-pv');
+
+    _curPvDiv.innerHTML = 0;
+    return;
+  }
+
+  var curSelDiv = document.querySelector('.cur-sel');
+  curSelDiv.innerHTML = element.data('label');
+  totalPv = 0;
+  totalPv = parseInt(element.data('pv'));
+  calcTargetBonus(cy, element);
+  var curPvDiv = document.querySelector('.cur-pv');
+  curPvDiv.innerHTML = totalPv;
+}
+
+function calcTargetBonus(cy, element) {
+  element.predecessors().each(function (e) {
+    if (e.isEdge()) {
+      calcTargetBonus(cy, e);
+    } else {
+      calcTargetBonus(cy, e);
+      totalPv += parseInt(e.data('pv'));
+    }
   });
 }
 
