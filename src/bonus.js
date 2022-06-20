@@ -8,7 +8,7 @@ export function makingFirstBonusChart() {
     wrapper.classList.add('first-bonus-item');
 
     let bonusTotal = document.createElement('div');
-    bonusTotal.innerText = `${bonusData.total}PV`;
+    bonusTotal.innerText = `${bonusData.total}만PV`;
     bonusTotal.classList.add('bonus-total');
 
     let bonusPercentage = document.createElement('div');
