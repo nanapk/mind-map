@@ -10,6 +10,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8);
+/* harmony import */ var _bonus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 //mport './favicon.ico';
 // favicon build
 //import '../model/data.json';
@@ -19,35 +20,33 @@ __webpack_require__.r(__webpack_exports__);
 cytoscape__WEBPACK_IMPORTED_MODULE_0___default().use((cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1___default()));
  // webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
 
+
 var data = [{
-  "data": {
-    "id": "A",
-    "url": "https://github.com/nomelancholy/js-project-driven-study-mind-map/projects/1?add_cards_query=is%3Aopen",
-    "label": "A"
+  data: {
+    id: 'A',
+    label: 'A'
   }
 }, {
-  "data": {
-    "id": "B",
-    "url": "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNQPahfceN-IrrIMqFcBxt0bBJxcog%3A1577373548670&source=hp&ei=bM8EXp3aJoKpoASW2InwAg&q=no+such+file+or+directory%2C+open+%27C%3A%5Cdev%5Cworkspace%5Cjs-seomal-clone%5Cpackage.json%27&oq=no+such+file+or+directory%2C+open+%27C%3A%5Cdev%5Cworkspace%5Cjs-seomal-clone%5Cpackage.json%27&gs_l=psy-ab.3...7437.7437..8911...1.0..0.95.95.1......0....2j1..gws-wiz.pzIrSS2UT84&ved=0ahUKEwidwK2wztPmAhWCFIgKHRZsAi4Q4dUDCAY&uact=5",
-    "label": "B"
+  data: {
+    id: 'B',
+    label: 'B'
   }
 }, {
-  "data": {
-    "id": "A->B",
-    "source": "B",
-    "target": "A"
+  data: {
+    id: 'A->B',
+    source: 'B',
+    target: 'A'
   }
 }, {
-  "data": {
-    "id": "C",
-    "url": "https://stackoverflow.com/questions/9484829/npm-cant-find-package-json",
-    "label": "C"
+  data: {
+    id: 'C',
+    label: 'C'
   }
 }, {
-  "data": {
-    "id": "A->C",
-    "source": "C",
-    "target": "A"
+  data: {
+    id: 'A->C',
+    source: 'C',
+    target: 'A'
   }
 }];
 var curASCII = 68; // D
@@ -73,13 +72,13 @@ var cy = cytoscape__WEBPACK_IMPORTED_MODULE_0___default()({
     selector: 'node',
     style: {
       'background-color': nodeColor,
-      'label': 'data(label)',
-      'color': nodeColor
+      label: 'data(label)',
+      color: nodeColor
     }
   }, {
     selector: 'edge',
     style: {
-      'width': edgeWidth,
+      width: edgeWidth,
       'curve-style': 'bezier',
       'line-color': edgeColor,
       'source-arrow-color': edgeColor,
@@ -113,7 +112,7 @@ cy.on('tap', function (e) {
   }
 
   if (curASCII == 123) {
-    alert("더 이상 추가할 수 없습니다.");
+    alert('더 이상 추가할 수 없습니다.');
     return;
   }
 
@@ -124,7 +123,6 @@ cy.on('tap', function (e) {
     group: 'nodes',
     data: {
       id: newId,
-      url: "asdfasdf",
       label: newId
     },
     position: {
@@ -151,7 +149,7 @@ cy.on('taphold', function (e) {
   });
 
   if (count != 0) {
-    alert("끝부분만 삭제가 가능합니다.");
+    alert('끝부분만 삭제가 가능합니다.');
     return;
   }
 
@@ -165,6 +163,7 @@ window.addEventListener('resize', function () {
     cy.fit();
   }, 200);
 });
+(0,_bonus__WEBPACK_IMPORTED_MODULE_3__.makingFirstBonusChart)();
 
 /***/ }),
 /* 1 */
@@ -10301,6 +10300,66 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
+
+/***/ }),
+/* 9 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "makingFirstBonusChart": () => /* binding */ makingFirstBonusChart
+/* harmony export */ });
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(10);
+
+function makingFirstBonusChart() {
+  var firstBonusChartDiv = document.querySelector('.first-bonus-chart');
+  _data__WEBPACK_IMPORTED_MODULE_0__.firstBonusData.forEach(function (bonusData) {
+    var wrapper = document.createElement('div');
+    wrapper.classList.add('first-bonus-item');
+    var bonusTotal = document.createElement('div');
+    bonusTotal.innerText = "".concat(bonusData.total, "PV");
+    bonusTotal.classList.add('bonus-total');
+    var bonusPercentage = document.createElement('div');
+    bonusPercentage.innerText = "".concat(bonusData.percentage, "%");
+    bonusTotal.classList.add('bonus-percentage');
+    wrapper.appendChild(bonusTotal);
+    wrapper.appendChild(bonusPercentage);
+    firstBonusChartDiv.appendChild(wrapper);
+  });
+}
+
+/***/ }),
+/* 10 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "firstBonusData": () => /* binding */ firstBonusData
+/* harmony export */ });
+var firstBonusData = [{
+  total: 20,
+  percentage: 3
+}, {
+  total: 60,
+  percentage: 6
+}, {
+  total: 120,
+  percentage: 9
+}, {
+  total: 240,
+  percentage: 12
+}, {
+  total: 400,
+  percentage: 15
+}, {
+  total: 680,
+  percentage: 18
+}, {
+  total: 1000,
+  percentage: 21
+}];
 
 /***/ })
 /******/ 	]);
