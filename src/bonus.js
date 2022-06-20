@@ -21,3 +21,34 @@ export function makingFirstBonusChart() {
     firstBonusChartDiv.appendChild(wrapper);
   });
 }
+
+let totalPv = 0;
+export function applyTargetBonus(cy, element) {
+  if (cy == null || element == null) {
+    const curSelDiv = document.querySelector('.cur-sel');
+    curSelDiv.innerHTML = '없음';
+    const curPvDiv = document.querySelector('.cur-pv');
+    curPvDiv.innerHTML = 0;
+    return;
+  }
+
+  const curSelDiv = document.querySelector('.cur-sel');
+  curSelDiv.innerHTML = element.data('label');
+
+  totalPv = 0;
+  totalPv = parseInt(element.data('pv'));
+  calcTargetBonus(cy, element);
+  const curPvDiv = document.querySelector('.cur-pv');
+  curPvDiv.innerHTML = totalPv;
+}
+
+function calcTargetBonus(cy, element) {
+  element.predecessors().each(function (e) {
+    if (e.isEdge()) {
+      calcTargetBonus(cy, e);
+    } else {
+      calcTargetBonus(cy, e);
+      totalPv += parseInt(e.data('pv'));
+    }
+  });
+}

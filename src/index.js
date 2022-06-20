@@ -10,18 +10,20 @@ cytoscape.use(coseBilkent);
 import './style.css';
 // webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
 
-import { makingFirstBonusChart } from './bonus';
+import { makingFirstBonusChart, applyTargetBonus } from './bonus';
 
 const data = [
   {
     data: {
       id: 'A',
+      pv: '20', // 만 단위
       label: 'A',
     },
   },
   {
     data: {
       id: 'B',
+      pv: '20', // 만 단위
       label: 'B',
     },
   },
@@ -31,6 +33,7 @@ const data = [
   {
     data: {
       id: 'C',
+      pv: '20', // 만 단위
       label: 'C',
     },
   },
@@ -101,6 +104,18 @@ function isNode(e) {
 cy.on('tap', function (e) {
   if (!isNode(e)) return;
 
+  if (e.target === curSel) {
+    resetFocus(e.target);
+    curSel = null;
+  } else {
+    if (curSel != null) resetFocus(curSel);
+    setFocus(e.target);
+    curSel = e.target;
+  }
+
+  applyTargetBonus(cy, curSel);
+  return;
+
   if (bTapHold) {
     bTapHold = false;
     return;
@@ -120,6 +135,7 @@ cy.on('tap', function (e) {
       group: 'nodes',
       data: {
         id: newId,
+        pv: '20', // 만 단위
         label: newId,
       },
       position: { x: parentPos.x, y: parentPos.y + 80 },
@@ -165,3 +181,14 @@ window.addEventListener('resize', function () {
 });
 
 makingFirstBonusChart();
+
+let curSel = null;
+const nodeActiveColor = '#ffa502';
+
+function setFocus(target_element) {
+  target_element.style('background-color', nodeActiveColor);
+}
+
+function resetFocus(target_element) {
+  target_element.style('background-color', nodeColor);
+}
