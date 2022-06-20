@@ -1,7 +1,38 @@
-html,body,#cy {
-    width: 100%;
-    height: 100%;
+html,
+body,
+#cy {
+  width: 100%;
+  height: 100%;
 }
 body {
-    margin: 0;
+  margin: 0;
+}
+
+.first-bonus-chart {
+  padding: 10px;
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  right: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.first-bonus-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.first-bonus-item:last-child {
+  margin-bottom: 0px;
+}
+
+.bonus-total {
+  margin-right: 10px;
+  color: gray;
+}
+
+.bonus-percentage {
 }

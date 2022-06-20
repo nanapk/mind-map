@@ -10,6 +10,8 @@ cytoscape.use(coseBilkent);
 import './style.css';
 // webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
 
+import { makingFirstBonusChart } from './bonus';
+
 const data = [
   {
     data: {
@@ -118,7 +120,6 @@ cy.on('tap', function (e) {
       group: 'nodes',
       data: {
         id: newId,
-        url: 'asdfasdf',
         label: newId,
       },
       position: { x: parentPos.x, y: parentPos.y + 80 },
@@ -162,3 +163,5 @@ window.addEventListener('resize', function () {
     cy.fit();
   }, 200);
 });
+
+makingFirstBonusChart();
