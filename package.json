@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
+  "homepage": "https://nanapk.github.io/mind-map/",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --hot"
+    "start": "webpack-dev-server --hot",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +23,7 @@
     "cytoscape": "^3.18.0",
     "cytoscape-cose-bilkent": "^4.1.0",
     "file-loader": "^5.0.2",
+    "gh-pages": "^4.0.0",
     "html-loader": "^1.3.2",
     "html-webpack-plugin": "^4.5.1",
     "mini-css-extract-plugin": "^1.3.4",
