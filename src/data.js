@@ -34,6 +34,16 @@ export const initData = [
     },
   },
   {
-    data: { id: 'A->C', source: 'C', target: 'A' },
+    data: { id: 'B->C', source: 'C', target: 'B' },
+  },
+  {
+    data: {
+      id: 'D',
+      pv: '20', // 만 단위
+      label: 'D',
+    },
+  },
+  {
+    data: { id: 'B->D', source: 'D', target: 'B' },
   },
 ];

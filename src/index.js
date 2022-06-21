@@ -71,7 +71,7 @@ cy.on('tap', function (e) {
     resetFocus(cy, e.target);
     curSel = null;
   } else {
-    if (curSel != null) resetFocus(curSel);
+    if (curSel != null) resetFocus(cy, curSel);
     setFocus(cy, e.target);
     curSel = e.target;
   }
@@ -131,10 +131,7 @@ function setFocus(cy, target_element) {
 
 function setFocusPredecessor(cy, target_element) {
   target_element.predecessors().each(function (e) {
-    if (e.isEdge()) {
-      setFocusPredecessor(cy, e);
-    } else {
-      setFocusPredecessor(cy, e);
+    if (!e.isEdge()) {
       e.style('background-color', predecessorsColor);
     }
   });
@@ -147,10 +144,7 @@ function resetFocus(cy, target_element) {
 
 function resetFocusPredecessor(cy, target_element) {
   target_element.predecessors().each(function (e) {
-    if (e.isEdge()) {
-      setFocusPredecessor(cy, e);
-    } else {
-      setFocusPredecessor(cy, e);
+    if (!e.isEdge()) {
       e.style('background-color', nodeColor);
     }
   });
