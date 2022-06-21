@@ -46,3 +46,47 @@ body {
   border: 1px solid black;
   border-radius: 10px;
 }
+
+.gray-background {
+  position: absolute;
+  background-color: lightgray;
+  opacity: 0.8;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+  top: 0;
+  left: 0;
+}
+
+.gray-background.hide {
+  display: none;
+}
+
+.gray-background.show {
+  display: block;
+}
+
+.menu {
+  padding: 10px;
+  z-index: 5;
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* opacity: 1; */
+}
+
+.menu.show {
+  display: inline-block;
+}
+
+.menu.hide {
+  display: none;
+}
+
+.menu-item {
+  cursor: pointer;
+}

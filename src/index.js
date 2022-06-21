@@ -11,6 +11,7 @@ import './style.css';
 // webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
 
 import { makingFirstBonusChart, applyTargetBonus } from './bonus';
+import { showMenu, hideMenu } from './common';
 
 const data = [
   {
@@ -155,20 +156,33 @@ cy.on('taphold', function (e) {
   if (!isNode(e)) return;
 
   const myId = e.target.data('id');
-  let count = 0;
-  e.target.connectedEdges().forEach(function (target) {
-    if (target.target().data('id') == myId) {
-      count++;
-    }
-  });
+  showMenu();
 
-  if (count != 0) {
-    alert('끝부분만 삭제가 가능합니다.');
-    return;
-  }
+  document
+    .querySelector('.menu-item[action="close"]')
+    .addEventListener('click', function () {
+      hideMenu();
+    });
 
-  cy.remove(e.target);
-  bTapHold = true;
+  document
+    .querySelector('.menu-item[action="delete"]')
+    .addEventListener('click', function () {
+      let count = 0;
+      e.target.connectedEdges().forEach(function (target) {
+        if (target.target().data('id') == myId) {
+          count++;
+        }
+      });
+
+      if (count != 0) {
+        alert('끝부분만 삭제가 가능합니다.');
+        return;
+      }
+
+      cy.remove(e.target);
+      bTapHold = true;
+      hideMenu();
+    });
 });
 
 let resizeTimer;
