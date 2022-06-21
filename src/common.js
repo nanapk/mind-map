@@ -17,3 +17,9 @@ export function hideMenu() {
   hideElement('gray-background');
   hideElement('menu');
 }
+
+document
+  .querySelector('.menu-item[action="close"]')
+  .addEventListener('click', function () {
+    hideMenu();
+  });
