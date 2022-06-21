@@ -84,33 +84,17 @@ cy.on('taphold', function (e) {
   if (!isNode(e)) return;
 
   const myId = e.target.data('id');
+  const myPV = e.target.data('pv');
   showMenu();
+  const pvInput = document.querySelector('.pv-input');
+  pvInput.value = myPV;
 
-  document
-    .querySelector('.menu-item[action="close"]')
-    .addEventListener('click', function () {
-      hideMenu();
-    });
-
-  document
-    .querySelector('.menu-item[action="delete"]')
-    .addEventListener('click', function () {
-      let count = 0;
-      e.target.connectedEdges().forEach(function (target) {
-        if (target.target().data('id') == myId) {
-          count++;
-        }
-      });
-
-      if (count != 0) {
-        alert('끝부분만 삭제가 가능합니다.');
-        return;
-      }
-
-      cy.remove(e.target);
-      bTapHold = true;
-      hideMenu();
-    });
+  const editButton = document.querySelector('.edit-pv');
+  editButton.onclick = function () {
+    const newPV = pvInput.value;
+    e.target.data('pv', newPV);
+    hideMenu();
+  };
 });
 
 let resizeTimer;
