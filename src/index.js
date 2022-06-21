@@ -106,11 +106,11 @@ cy.on('tap', function (e) {
   if (!isNode(e)) return;
 
   if (e.target === curSel) {
-    resetFocus(e.target);
+    resetFocus(cy, e.target);
     curSel = null;
   } else {
     if (curSel != null) resetFocus(curSel);
-    setFocus(e.target);
+    setFocus(cy, e.target);
     curSel = e.target;
   }
 
@@ -198,11 +198,36 @@ makingFirstBonusChart();
 
 let curSel = null;
 const nodeActiveColor = '#ffa502';
+const predecessorsColor = '#1e90ff';
 
-function setFocus(target_element) {
+function setFocus(cy, target_element) {
   target_element.style('background-color', nodeActiveColor);
+  setFocusPredecessor(cy, target_element);
 }
 
-function resetFocus(target_element) {
+function setFocusPredecessor(cy, target_element) {
+  target_element.predecessors().each(function (e) {
+    if (e.isEdge()) {
+      setFocusPredecessor(cy, e);
+    } else {
+      setFocusPredecessor(cy, e);
+      e.style('background-color', predecessorsColor);
+    }
+  });
+}
+
+function resetFocus(cy, target_element) {
   target_element.style('background-color', nodeColor);
+  resetFocusPredecessor(cy, target_element);
+}
+
+function resetFocusPredecessor(cy, target_element) {
+  target_element.predecessors().each(function (e) {
+    if (e.isEdge()) {
+      setFocusPredecessor(cy, e);
+    } else {
+      setFocusPredecessor(cy, e);
+      e.style('background-color', nodeColor);
+    }
+  });
 }

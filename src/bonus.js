@@ -28,7 +28,7 @@ export function applyTargetBonus(cy, element) {
     const curSelDiv = document.querySelector('.cur-sel');
     curSelDiv.innerHTML = '없음';
     const curPvDiv = document.querySelector('.cur-pv');
-    curPvDiv.innerHTML = 0;
+    curPvDiv.innerHTML = '0 만';
     return;
   }
 
@@ -39,7 +39,7 @@ export function applyTargetBonus(cy, element) {
   totalPv = parseInt(element.data('pv'));
   calcTargetBonus(cy, element);
   const curPvDiv = document.querySelector('.cur-pv');
-  curPvDiv.innerHTML = totalPv;
+  curPvDiv.innerHTML = `${totalPv} 만`;
 }
 
 function calcTargetBonus(cy, element) {
