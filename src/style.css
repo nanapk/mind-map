@@ -90,3 +90,10 @@ body {
 .menu-item {
   cursor: pointer;
 }
+
+.button-wrapper {
+  position: absolute;
+  z-index: 2;
+  top: 90px;
+  left: 20px;
+}

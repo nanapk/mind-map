@@ -185,3 +185,28 @@ function resetFocusPredecessor(cy, target_element) {
     }
   });
 }
+
+document
+  .querySelector('.utility-button[action="add"]')
+  .addEventListener('click', function () {
+    if (!curSel) alert('대상을 선택해주세요.');
+  });
+
+document
+  .querySelector('.utility-button[action="delete"]')
+  .addEventListener('click', function () {
+    if (!curSel) alert('대상을 선택해주세요.');
+    let count = 0;
+    curSel.connectedEdges().forEach(function (target) {
+      if (target.target().data('id') == curSel.data('id')) {
+        count++;
+      }
+    });
+
+    if (count !== 0) {
+      alert('끝부분만 삭제가 가능합니다.');
+      return;
+    }
+
+    cy.remove(curSel);
+  });
