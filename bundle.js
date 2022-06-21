@@ -12,86 +12,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8);
 /* harmony import */ var _bonus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(11);
-//mport './favicon.ico';
-// favicon build
-//import '../model/data.json';
-// data build
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12);
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(10);
 
 
 cytoscape__WEBPACK_IMPORTED_MODULE_0___default().use((cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1___default()));
- // webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
 
 
 
-var data = [{
-  data: {
-    id: 'A',
-    pv: '20',
-    // 만 단위
-    label: 'A'
-  }
-}, {
-  data: {
-    id: 'B',
-    pv: '20',
-    // 만 단위
-    label: 'B'
-  }
-}, {
-  data: {
-    id: 'A->B',
-    source: 'B',
-    target: 'A'
-  }
-}, {
-  data: {
-    id: 'C',
-    pv: '20',
-    // 만 단위
-    label: 'C'
-  }
-}, {
-  data: {
-    id: 'A->C',
-    source: 'C',
-    target: 'A'
-  }
-}];
-var curASCII = 68; // D
+
+
+var curSel = null;
+var curASCII = 69; // E
 
 function GetNewID() {
   if (curASCII == 91) curASCII = 97;
   return String.fromCharCode(curASCII++);
-} // node & font 크기 값
-
-
-var edgeWidth = '2px';
-var arrowScale = 0.8; // edge & arrow 크기값
-
-var edgeColor = '#ced6e0';
-var nodeColor = '#57606f'; // 아래는 공식 사이트에 올라와 있는 예제 코드입니다
+}
 
 var cy = cytoscape__WEBPACK_IMPORTED_MODULE_0___default()({
   container: document.getElementById('cy'),
-  // container to render in
-  elements: data,
-  style: [// the stylesheet for the graph
-  {
+  elements: _data__WEBPACK_IMPORTED_MODULE_6__.initData,
+  style: [{
     selector: 'node',
     style: {
-      'background-color': nodeColor,
+      'background-color': _style__WEBPACK_IMPORTED_MODULE_5__.nodeColor,
       label: 'data(label)',
-      color: nodeColor
+      color: _style__WEBPACK_IMPORTED_MODULE_5__.nodeColor
     }
   }, {
     selector: 'edge',
     style: {
-      width: edgeWidth,
+      width: _style__WEBPACK_IMPORTED_MODULE_5__.edgeWidth,
       'curve-style': 'bezier',
-      'line-color': edgeColor,
-      'source-arrow-color': edgeColor,
+      'line-color': _style__WEBPACK_IMPORTED_MODULE_5__.edgeColor,
+      'source-arrow-color': _style__WEBPACK_IMPORTED_MODULE_5__.edgeColor,
       'source-arrow-shape': 'vee',
-      'arrow-scale': arrowScale
+      'arrow-scale': _style__WEBPACK_IMPORTED_MODULE_5__.arrowScale
     }
   }],
   layout: {
@@ -112,40 +69,99 @@ function isNode(e) {
 }
 
 cy.on('tap', function (e) {
-  if (!isNode(e)) return;
-
-  if (e.target === curSel) {
-    resetFocus(e.target);
-    curSel = null;
-  } else {
-    if (curSel != null) resetFocus(curSel);
-    setFocus(e.target);
-    curSel = e.target;
-  }
-
-  (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, curSel);
-  return;
-
   if (bTapHold) {
     bTapHold = false;
     return;
   }
 
-  if (curASCII == 123) {
+  if (!isNode(e)) return;
+
+  if (e.target === curSel) {
+    resetFocus(cy, e.target);
+    curSel = null;
+  } else {
+    if (curSel != null) resetFocus(cy, curSel);
+    setFocus(cy, e.target);
+    curSel = e.target;
+  }
+
+  (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, curSel);
+  return;
+});
+cy.on('taphold', function (e) {
+  if (!isNode(e)) return;
+  bTapHold = true;
+  var myId = e.target.data('id');
+  var myPV = e.target.data('pv');
+  (0,_common__WEBPACK_IMPORTED_MODULE_4__.showMenu)();
+  var pvInput = document.querySelector('.pv-input');
+  pvInput.value = myPV;
+  var editButton = document.querySelector('.edit-pv');
+
+  editButton.onclick = function () {
+    var newPV = pvInput.value;
+    var id = e.target.data('id');
+    e.target.data('pv', newPV);
+    e.target.data('label', "".concat(id, "(").concat(newPV, ")"));
+    (0,_common__WEBPACK_IMPORTED_MODULE_4__.hideMenu)();
+  };
+});
+var resizeTimer;
+window.addEventListener('resize', function () {
+  this.clearTimeout(resizeTimer);
+  resizeTimer = this.setTimeout(function () {
+    cy.fit();
+  }, 200);
+});
+(0,_bonus__WEBPACK_IMPORTED_MODULE_3__.makingFirstBonusChart)();
+
+function setFocus(cy, target_element) {
+  target_element.style('background-color', _style__WEBPACK_IMPORTED_MODULE_5__.nodeActiveColor);
+  setFocusPredecessor(cy, target_element);
+}
+
+function setFocusPredecessor(cy, target_element) {
+  target_element.predecessors().each(function (e) {
+    if (!e.isEdge()) {
+      e.style('background-color', _style__WEBPACK_IMPORTED_MODULE_5__.predecessorsColor);
+    }
+  });
+}
+
+function resetFocus(cy, target_element) {
+  target_element.style('background-color', _style__WEBPACK_IMPORTED_MODULE_5__.nodeColor);
+  resetFocusPredecessor(cy, target_element);
+}
+
+function resetFocusPredecessor(cy, target_element) {
+  target_element.predecessors().each(function (e) {
+    if (!e.isEdge()) {
+      e.style('background-color', _style__WEBPACK_IMPORTED_MODULE_5__.nodeColor);
+    }
+  });
+}
+
+document.querySelector('.utility-button[action="add"]').addEventListener('click', function () {
+  if (!curSel) {
+    alert('대상을 선택해주세요.');
+    return;
+  }
+
+  if (curASCII === 123) {
     alert('더 이상 추가할 수 없습니다.');
     return;
   }
 
-  var parentId = e.target.data('id');
-  var parentPos = e.target.position();
-  var newId = GetNewID();
+  var parentId = curSel.data('id');
+  var parentPos = curSel.position();
+  var newId = GetNewID(curASCII);
   cy.add([{
     group: 'nodes',
     data: {
       id: newId,
       pv: '20',
       // 만 단위
-      label: newId
+      label: "".concat(newId, "(20)")
     },
     position: {
       x: parentPos.x,
@@ -160,49 +176,26 @@ cy.on('tap', function (e) {
     }
   }]);
 });
-cy.on('taphold', function (e) {
-  if (!isNode(e)) return;
-  var myId = e.target.data('id');
-  (0,_common__WEBPACK_IMPORTED_MODULE_4__.showMenu)();
-  document.querySelector('.menu-item[action="close"]').addEventListener('click', function () {
-    (0,_common__WEBPACK_IMPORTED_MODULE_4__.hideMenu)();
-  });
-  document.querySelector('.menu-item[action="delete"]').addEventListener('click', function () {
-    var count = 0;
-    e.target.connectedEdges().forEach(function (target) {
-      if (target.target().data('id') == myId) {
-        count++;
-      }
-    });
+document.querySelector('.utility-button[action="delete"]').addEventListener('click', function () {
+  if (!curSel) {
+    alert('대상을 선택해주세요.');
+    return;
+  }
 
-    if (count != 0) {
-      alert('끝부분만 삭제가 가능합니다.');
-      return;
+  var count = 0;
+  curSel.connectedEdges().forEach(function (target) {
+    if (target.target().data('id') == curSel.data('id')) {
+      count++;
     }
-
-    cy.remove(e.target);
-    bTapHold = true;
-    (0,_common__WEBPACK_IMPORTED_MODULE_4__.hideMenu)();
   });
-});
-var resizeTimer;
-window.addEventListener('resize', function () {
-  this.clearTimeout(resizeTimer);
-  resizeTimer = this.setTimeout(function () {
-    cy.fit();
-  }, 200);
-});
-(0,_bonus__WEBPACK_IMPORTED_MODULE_3__.makingFirstBonusChart)();
-var curSel = null;
-var nodeActiveColor = '#ffa502';
 
-function setFocus(target_element) {
-  target_element.style('background-color', nodeActiveColor);
-}
+  if (count !== 0) {
+    alert('끝부분만 삭제가 가능합니다.');
+    return;
+  }
 
-function resetFocus(target_element) {
-  target_element.style('background-color', nodeColor);
-}
+  cy.remove(curSel);
+});
 
 /***/ }),
 /* 1 */
@@ -10348,7 +10341,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "makingFirstBonusChart": () => /* binding */ makingFirstBonusChart,
-/* harmony export */   "applyTargetBonus": () => /* binding */ applyTargetBonus
+/* harmony export */   "applyTargetBonus": () => /* binding */ applyTargetBonus,
+/* harmony export */   "getChildrenNodes": () => /* binding */ getChildrenNodes
 /* harmony export */ });
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(10);
 
@@ -10377,28 +10371,70 @@ function applyTargetBonus(cy, element) {
 
     var _curPvDiv = document.querySelector('.cur-pv');
 
-    _curPvDiv.innerHTML = 0;
+    _curPvDiv.innerHTML = '0 만';
+
+    var _curPaybackDiv = document.querySelector('.cur-payback');
+
+    _curPaybackDiv.innerHTML = '0 %';
+
+    var _curRewardDiv = document.querySelector('.cur-reward');
+
+    _curRewardDiv.innerHTML = '0 만원';
     return;
   }
 
   var curSelDiv = document.querySelector('.cur-sel');
   curSelDiv.innerHTML = element.data('label');
-  totalPv = 0;
   totalPv = parseInt(element.data('pv'));
   calcTargetBonus(cy, element);
+  var targetPv = totalPv;
   var curPvDiv = document.querySelector('.cur-pv');
-  curPvDiv.innerHTML = totalPv;
+  curPvDiv.innerHTML = "".concat(targetPv, " \uB9CC");
+  var ratio = getPercentByPV(targetPv);
+  var curPaybackDiv = document.querySelector('.cur-payback');
+  curPaybackDiv.innerHTML = "".concat(ratio * 100, " %");
+  var reward = calcTargetReward(cy, element, ratio * targetPv);
+  var curRewardDiv = document.querySelector('.cur-reward');
+  curRewardDiv.innerHTML = "".concat(reward.toFixed(1), " \uB9CC\uC6D0");
 }
 
 function calcTargetBonus(cy, element) {
-  element.predecessors().each(function (e) {
-    if (e.isEdge()) {
-      calcTargetBonus(cy, e);
+  var children = getChildrenNodes(cy, element);
+  children.forEach(function (child) {
+    if (child.isEdge()) {
+      calcTargetBonus(cy, child);
     } else {
-      calcTargetBonus(cy, e);
-      totalPv += parseInt(e.data('pv'));
+      calcTargetBonus(cy, child);
+      totalPv += parseInt(child.data('pv'));
     }
   });
+}
+
+function getPercentByPV(total) {
+  if (total < 20) return 0.0;else if (total < 60) return 0.03;else if (total < 120) return 0.06;else if (total < 240) return 0.09;else if (total < 400) return 0.12;else if (total < 680) return 0.15;else if (total < 1000) return 0.18;else return 0.21;
+}
+
+function calcTargetReward(cy, element, totalReward) {
+  var children = getChildrenNodes(cy, element);
+  children.forEach(function (child) {
+    totalPv = parseInt(child.data('pv'));
+    calcTargetBonus(cy, child);
+    var childPv = totalPv;
+    var childRatio = getPercentByPV(childPv);
+    totalReward -= childPv * childRatio;
+  });
+  return totalReward;
+}
+
+function getChildrenNodes(cy, element) {
+  var myId = element.data('id');
+  var children = [];
+  element.connectedEdges().forEach(function (target) {
+    if (target.target().data('id') == myId) {
+      children.push(target.source());
+    }
+  });
+  return children;
 }
 
 /***/ }),
@@ -10408,7 +10444,8 @@ function calcTargetBonus(cy, element) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "firstBonusData": () => /* binding */ firstBonusData
+/* harmony export */   "firstBonusData": () => /* binding */ firstBonusData,
+/* harmony export */   "initData": () => /* binding */ initData
 /* harmony export */ });
 var firstBonusData = [{
   total: 20,
@@ -10431,6 +10468,53 @@ var firstBonusData = [{
 }, {
   total: 1000,
   percentage: 21
+}];
+var initData = [{
+  data: {
+    id: 'A',
+    pv: '20',
+    // 만 단위
+    label: 'A(20)'
+  }
+}, {
+  data: {
+    id: 'B',
+    pv: '20',
+    // 만 단위
+    label: 'B(20)'
+  }
+}, {
+  data: {
+    id: 'A->B',
+    source: 'B',
+    target: 'A'
+  }
+}, {
+  data: {
+    id: 'C',
+    pv: '20',
+    // 만 단위
+    label: 'C(20)'
+  }
+}, {
+  data: {
+    id: 'B->C',
+    source: 'C',
+    target: 'B'
+  }
+}, {
+  data: {
+    id: 'D',
+    pv: '20',
+    // 만 단위
+    label: 'D(20)'
+  }
+}, {
+  data: {
+    id: 'B->D',
+    source: 'D',
+    target: 'B'
+  }
 }];
 
 /***/ }),
@@ -10461,6 +10545,32 @@ function hideMenu() {
   hideElement('gray-background');
   hideElement('menu');
 }
+document.querySelector('.menu-item[action="close"]').addEventListener('click', function () {
+  hideMenu();
+});
+
+/***/ }),
+/* 12 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "edgeWidth": () => /* binding */ edgeWidth,
+/* harmony export */   "arrowScale": () => /* binding */ arrowScale,
+/* harmony export */   "edgeColor": () => /* binding */ edgeColor,
+/* harmony export */   "nodeColor": () => /* binding */ nodeColor,
+/* harmony export */   "nodeActiveColor": () => /* binding */ nodeActiveColor,
+/* harmony export */   "predecessorsColor": () => /* binding */ predecessorsColor
+/* harmony export */ });
+// node & font 크기 값
+var edgeWidth = '2px';
+var arrowScale = 0.8; // edge & arrow 크기값
+
+var edgeColor = '#ced6e0';
+var nodeColor = '#57606f';
+var nodeActiveColor = '#ffa502';
+var predecessorsColor = '#1e90ff';
 
 /***/ })
 /******/ 	]);

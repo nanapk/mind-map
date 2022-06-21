@@ -34,15 +34,15 @@ body {
   color: gray;
 }
 
-.bonus-percentage {
-}
-
-.target-bonus-info {
-  padding: 10px;
+.left-info {
   position: absolute;
   z-index: 2;
   top: 20px;
   left: 20px;
+}
+
+.target-bonus-info {
+  padding: 10px;
   border: 1px solid black;
   border-radius: 10px;
 }
@@ -87,7 +87,12 @@ body {
   display: none;
 }
 
-.menu-item {
+.menu-item,
+.edit-pv {
   cursor: pointer;
+}
+
+.button-wrapper {
+  margin-top: 15px;
 }
 
