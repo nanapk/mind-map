@@ -18,7 +18,7 @@ import {
 import { initData } from './data';
 
 var curSel = null;
-let curASCII = 68; // D
+let curASCII = 69; // E
 function GetNewID() {
   if (curASCII == 91) curASCII = 97;
   return String.fromCharCode(curASCII++);
@@ -65,6 +65,11 @@ function isNode(e) {
 }
 
 cy.on('tap', function (e) {
+  if (bTapHold) {
+    bTapHold = false;
+    return;
+  }
+
   if (!isNode(e)) return;
 
   if (e.target === curSel) {
@@ -83,6 +88,7 @@ cy.on('tap', function (e) {
 cy.on('taphold', function (e) {
   if (!isNode(e)) return;
 
+  bTapHold = true;
   const myId = e.target.data('id');
   const myPV = e.target.data('pv');
   showMenu();
@@ -92,7 +98,9 @@ cy.on('taphold', function (e) {
   const editButton = document.querySelector('.edit-pv');
   editButton.onclick = function () {
     const newPV = pvInput.value;
+    const id = e.target.data('id');
     e.target.data('pv', newPV);
+    e.target.data('label', `${id}(${newPV})`);
     hideMenu();
   };
 });
@@ -158,7 +166,7 @@ document
         data: {
           id: newId,
           pv: '20', // 만 단위
-          label: newId,
+          label: `${newId}(20)`,
         },
         position: { x: parentPos.x, y: parentPos.y + 80 },
       },

@@ -13,14 +13,14 @@ export const initData = [
     data: {
       id: 'A',
       pv: '20', // 만 단위
-      label: 'A',
+      label: 'A(20)',
     },
   },
   {
     data: {
       id: 'B',
       pv: '20', // 만 단위
-      label: 'B',
+      label: 'B(20)',
     },
   },
   {
@@ -30,7 +30,7 @@ export const initData = [
     data: {
       id: 'C',
       pv: '20', // 만 단위
-      label: 'C',
+      label: 'C(20)',
     },
   },
   {
@@ -40,7 +40,7 @@ export const initData = [
     data: {
       id: 'D',
       pv: '20', // 만 단위
-      label: 'D',
+      label: 'D(20)',
     },
   },
   {
