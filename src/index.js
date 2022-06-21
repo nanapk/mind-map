@@ -6,7 +6,7 @@ cytoscape.use(coseBilkent);
 import './style.css';
 
 import { makingFirstBonusChart, applyTargetBonus } from './bonus';
-import { showMenu, hideMenu, GetNewID } from './common';
+import { showMenu, hideMenu } from './common';
 import {
   edgeWidth,
   arrowScale,
@@ -19,6 +19,10 @@ import { initData } from './data';
 
 var curSel = null;
 let curASCII = 68; // D
+function GetNewID() {
+  if (curASCII == 91) curASCII = 97;
+  return String.fromCharCode(curASCII++);
+}
 
 var cy = cytoscape({
   container: document.getElementById('cy'),
@@ -74,40 +78,6 @@ cy.on('tap', function (e) {
 
   applyTargetBonus(cy, curSel);
   return;
-
-  if (bTapHold) {
-    bTapHold = false;
-    return;
-  }
-  if (curASCII == 123) {
-    alert('더 이상 추가할 수 없습니다.');
-    return;
-  }
-
-  const parentId = e.target.data('id');
-  const parentPos = e.target.position();
-
-  const newId = GetNewID();
-
-  cy.add([
-    {
-      group: 'nodes',
-      data: {
-        id: newId,
-        pv: '20', // 만 단위
-        label: newId,
-      },
-      position: { x: parentPos.x, y: parentPos.y + 80 },
-    },
-    {
-      group: 'edges',
-      data: {
-        id: `${parentId}->${newId}`,
-        source: newId,
-        target: parentId,
-      },
-    },
-  ]);
 });
 
 cy.on('taphold', function (e) {
@@ -189,13 +159,49 @@ function resetFocusPredecessor(cy, target_element) {
 document
   .querySelector('.utility-button[action="add"]')
   .addEventListener('click', function () {
-    if (!curSel) alert('대상을 선택해주세요.');
+    if (!curSel) {
+      alert('대상을 선택해주세요.');
+      return;
+    }
+
+    if (curASCII === 123) {
+      alert('더 이상 추가할 수 없습니다.');
+      return;
+    }
+
+    const parentId = curSel.data('id');
+    const parentPos = curSel.position();
+
+    const newId = GetNewID(curASCII);
+
+    cy.add([
+      {
+        group: 'nodes',
+        data: {
+          id: newId,
+          pv: '20', // 만 단위
+          label: newId,
+        },
+        position: { x: parentPos.x, y: parentPos.y + 80 },
+      },
+      {
+        group: 'edges',
+        data: {
+          id: `${parentId}->${newId}`,
+          source: newId,
+          target: parentId,
+        },
+      },
+    ]);
   });
 
 document
   .querySelector('.utility-button[action="delete"]')
   .addEventListener('click', function () {
-    if (!curSel) alert('대상을 선택해주세요.');
+    if (!curSel) {
+      alert('대상을 선택해주세요.');
+      return;
+    }
     let count = 0;
     curSel.connectedEdges().forEach(function (target) {
       if (target.target().data('id') == curSel.data('id')) {
