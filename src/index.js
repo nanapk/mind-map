@@ -1,69 +1,29 @@
-//mport './favicon.ico';
-// favicon build
-//import '../model/data.json';
-// data build
 import cytoscape from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 
 cytoscape.use(coseBilkent);
 
 import './style.css';
-// webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
 
 import { makingFirstBonusChart, applyTargetBonus } from './bonus';
-import { showMenu, hideMenu } from './common';
+import { showMenu, hideMenu, GetNewID } from './common';
+import {
+  edgeWidth,
+  arrowScale,
+  edgeColor,
+  nodeColor,
+  nodeActiveColor,
+  predecessorsColor,
+} from './style';
+import { initData } from './data';
 
-const data = [
-  {
-    data: {
-      id: 'A',
-      pv: '20', // 만 단위
-      label: 'A',
-    },
-  },
-  {
-    data: {
-      id: 'B',
-      pv: '20', // 만 단위
-      label: 'B',
-    },
-  },
-  {
-    data: { id: 'A->B', source: 'B', target: 'A' },
-  },
-  {
-    data: {
-      id: 'C',
-      pv: '20', // 만 단위
-      label: 'C',
-    },
-  },
-  {
-    data: { id: 'A->C', source: 'C', target: 'A' },
-  },
-];
-
+var curSel = null;
 let curASCII = 68; // D
-function GetNewID() {
-  if (curASCII == 91) curASCII = 97;
-  return String.fromCharCode(curASCII++);
-}
 
-// node & font 크기 값
-const edgeWidth = '2px';
-const arrowScale = 0.8;
-// edge & arrow 크기값
-const edgeColor = '#ced6e0';
-const nodeColor = '#57606f';
-
-// 아래는 공식 사이트에 올라와 있는 예제 코드입니다
-const cy = cytoscape({
-  container: document.getElementById('cy'), // container to render in
-
-  elements: data,
-
+var cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: initData,
   style: [
-    // the stylesheet for the graph
     {
       selector: 'node',
       style: {
@@ -72,7 +32,6 @@ const cy = cytoscape({
         color: nodeColor,
       },
     },
-
     {
       selector: 'edge',
       style: {
@@ -85,7 +44,6 @@ const cy = cytoscape({
       },
     },
   ],
-
   layout: {
     name: 'cose-bilkent',
     animate: false,
@@ -195,10 +153,6 @@ window.addEventListener('resize', function () {
 });
 
 makingFirstBonusChart();
-
-let curSel = null;
-const nodeActiveColor = '#ffa502';
-const predecessorsColor = '#1e90ff';
 
 function setFocus(cy, target_element) {
   target_element.style('background-color', nodeActiveColor);

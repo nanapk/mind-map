@@ -17,3 +17,12 @@ export function hideMenu() {
   hideElement('gray-background');
   hideElement('menu');
 }
+
+export function GetNewID() {
+  if (curASCII == 91) curASCII = 97;
+  return String.fromCharCode(curASCII++);
+}
+
+function addNode() {}
+
+function deleteNode(id) {}

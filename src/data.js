@@ -7,3 +7,33 @@ export const firstBonusData = [
   { total: 680, percentage: 18 },
   { total: 1000, percentage: 21 },
 ];
+
+export const initData = [
+  {
+    data: {
+      id: 'A',
+      pv: '20', // 만 단위
+      label: 'A',
+    },
+  },
+  {
+    data: {
+      id: 'B',
+      pv: '20', // 만 단위
+      label: 'B',
+    },
+  },
+  {
+    data: { id: 'A->B', source: 'B', target: 'A' },
+  },
+  {
+    data: {
+      id: 'C',
+      pv: '20', // 만 단위
+      label: 'C',
+    },
+  },
+  {
+    data: { id: 'A->C', source: 'C', target: 'A' },
+  },
+];
