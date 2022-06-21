@@ -11,6 +11,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8);
 /* harmony import */ var _bonus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(11);
 //mport './favicon.ico';
 // favicon build
 //import '../model/data.json';
@@ -19,6 +20,7 @@ __webpack_require__.r(__webpack_exports__);
 
 cytoscape__WEBPACK_IMPORTED_MODULE_0___default().use((cytoscape_cose_bilkent__WEBPACK_IMPORTED_MODULE_1___default()));
  // webpack으로 묶어줘야 하니 css파일을 진입점인 index.js 에 import 합니다
+
 
 
 var data = [{
@@ -161,20 +163,27 @@ cy.on('tap', function (e) {
 cy.on('taphold', function (e) {
   if (!isNode(e)) return;
   var myId = e.target.data('id');
-  var count = 0;
-  e.target.connectedEdges().forEach(function (target) {
-    if (target.target().data('id') == myId) {
-      count++;
-    }
+  (0,_common__WEBPACK_IMPORTED_MODULE_4__.showMenu)();
+  document.querySelector('.menu-item[action="close"]').addEventListener('click', function () {
+    (0,_common__WEBPACK_IMPORTED_MODULE_4__.hideMenu)();
   });
+  document.querySelector('.menu-item[action="delete"]').addEventListener('click', function () {
+    var count = 0;
+    e.target.connectedEdges().forEach(function (target) {
+      if (target.target().data('id') == myId) {
+        count++;
+      }
+    });
 
-  if (count != 0) {
-    alert('끝부분만 삭제가 가능합니다.');
-    return;
-  }
+    if (count != 0) {
+      alert('끝부분만 삭제가 가능합니다.');
+      return;
+    }
 
-  cy.remove(e.target);
-  bTapHold = true;
+    cy.remove(e.target);
+    bTapHold = true;
+    (0,_common__WEBPACK_IMPORTED_MODULE_4__.hideMenu)();
+  });
 });
 var resizeTimer;
 window.addEventListener('resize', function () {
@@ -10423,6 +10432,35 @@ var firstBonusData = [{
   total: 1000,
   percentage: 21
 }];
+
+/***/ }),
+/* 11 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "showElement": () => /* binding */ showElement,
+/* harmony export */   "hideElement": () => /* binding */ hideElement,
+/* harmony export */   "showMenu": () => /* binding */ showMenu,
+/* harmony export */   "hideMenu": () => /* binding */ hideMenu
+/* harmony export */ });
+function showElement(className) {
+  document.querySelector(".".concat(className)).classList.add('show');
+  document.querySelector(".".concat(className)).classList.remove('hide');
+}
+function hideElement(className) {
+  document.querySelector(".".concat(className)).classList.add('hide');
+  document.querySelector(".".concat(className)).classList.remove('show');
+}
+function showMenu() {
+  showElement('gray-background');
+  showElement('menu');
+}
+function hideMenu() {
+  hideElement('gray-background');
+  hideElement('menu');
+}
 
 /***/ })
 /******/ 	]);
