@@ -26,6 +26,12 @@ function GetNewID() {
   return String.fromCharCode(curASCII++);
 }
 
+function resetCurSel() {
+  resetFocus(cy, curSel);
+  curSel = null;
+  applyTargetBonus(cy, curSel);
+}
+
 var cy = cytoscape({
   container: document.getElementById('cy'),
   elements: elements,
@@ -88,8 +94,9 @@ cy.on('taphold', function (e) {
   if (!isNode(e)) return;
 
   bTapHold = true;
-  const myId = e.target.data('id');
-  const myPV = e.target.data('pv');
+  const targetEl = e.target;
+  const myId = targetEl.data('id');
+  const myPV = targetEl.data('pv');
   showMenu();
   const pvInput = document.querySelector('.pv-input');
   pvInput.value = myPV;
@@ -97,10 +104,11 @@ cy.on('taphold', function (e) {
   const editButton = document.querySelector('.edit-pv');
   editButton.onclick = function () {
     const newPV = pvInput.value;
-    const id = e.target.data('id');
-    e.target.data('pv', newPV);
-    e.target.data('label', `${id}(${newPV})`);
+    const id = targetEl.data('id');
+    targetEl.data('pv', newPV);
+    targetEl.data('label', `${id}(${newPV})`);
     hideMenu();
+    applyTargetBonus(cy, targetEl);
   };
 });
 
@@ -178,6 +186,7 @@ document
         },
       },
     ]);
+    resetCurSel();
   });
 
 document
@@ -200,4 +209,5 @@ document
     }
 
     cy.remove(curSel);
+    resetCurSel();
   });
