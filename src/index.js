@@ -14,7 +14,7 @@ import {
   edgeColor,
   nodeColor,
   nodeActiveColor,
-  predecessorsColor,
+  successorsColor,
 } from './style';
 import { elements } from './data';
 import { dagreLayout } from './layout';
@@ -117,24 +117,24 @@ makingFirstBonusChart();
 
 function setFocus(cy, target_element) {
   target_element.style('background-color', nodeActiveColor);
-  setFocusPredecessor(cy, target_element);
+  setFocusSuccessors(cy, target_element);
 }
 
-function setFocusPredecessor(cy, target_element) {
-  target_element.predecessors().each(function (e) {
+function setFocusSuccessors(cy, target_element) {
+  target_element.successors().each(function (e) {
     if (!e.isEdge()) {
-      e.style('background-color', predecessorsColor);
+      e.style('background-color', successorsColor);
     }
   });
 }
 
 function resetFocus(cy, target_element) {
   target_element.style('background-color', nodeColor);
-  resetFocusPredecessor(cy, target_element);
+  resetFocusSuccessors(cy, target_element);
 }
 
-function resetFocusPredecessor(cy, target_element) {
-  target_element.predecessors().each(function (e) {
+function resetFocusSuccessors(cy, target_element) {
+  target_element.successors().each(function (e) {
     if (!e.isEdge()) {
       e.style('background-color', nodeColor);
     }

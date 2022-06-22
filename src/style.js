@@ -5,4 +5,4 @@ export const arrowScale = 0.8;
 export const edgeColor = '#ced6e0';
 export const nodeColor = '#57606f';
 export const nodeActiveColor = '#ffa502';
-export const predecessorsColor = '#1e90ff';
+export const successorsColor = '#1e90ff';
