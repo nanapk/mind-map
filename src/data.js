@@ -8,42 +8,50 @@ export const firstBonusData = [
   { total: 1000, percentage: 21 },
 ];
 
-export const initData = [
-  {
-    data: {
-      id: 'A',
-      pv: '20', // 만 단위
-      label: 'A(20)',
+export const initData = [];
+
+export const elements = {
+  nodes: [
+    {
+      data: {
+        id: 'A',
+        pv: '20', // 만 단위
+        label: 'A(20)',
+      },
     },
-  },
-  {
-    data: {
-      id: 'B',
-      pv: '20', // 만 단위
-      label: 'B(20)',
+    {
+      data: {
+        id: 'B',
+        pv: '20', // 만 단위
+        label: 'B(20)',
+      },
     },
-  },
-  {
-    data: { id: 'A->B', source: 'B', target: 'A' },
-  },
-  {
-    data: {
-      id: 'C',
-      pv: '20', // 만 단위
-      label: 'C(20)',
+    {
+      data: {
+        id: 'C',
+        pv: '20', // 만 단위
+        label: 'C(20)',
+      },
     },
-  },
-  {
-    data: { id: 'B->C', source: 'C', target: 'B' },
-  },
-  {
-    data: {
-      id: 'D',
-      pv: '20', // 만 단위
-      label: 'D(20)',
+    {
+      data: {
+        id: 'D',
+        pv: '20', // 만 단위
+        label: 'D(20)',
+      },
     },
-  },
-  {
-    data: { id: 'B->D', source: 'D', target: 'B' },
-  },
-];
+  ],
+  edges: [
+    {
+      data: { id: 'A->B', source: 'A', target: 'B' },
+    },
+
+    {
+      data: { id: 'B->C', source: 'B', target: 'C' },
+    },
+
+    {
+      data: { id: 'B->D', source: 'B', target: 'D' },
+    },
+  ],
+};

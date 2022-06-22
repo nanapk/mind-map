@@ -1,7 +1,8 @@
 import cytoscape from 'cytoscape';
-import coseBilkent from 'cytoscape-cose-bilkent';
+import dagre from 'cytoscape-dagre';
+// import coseBilkent from 'cytoscape-cose-bilkent';
 
-cytoscape.use(coseBilkent);
+cytoscape.use(dagre);
 
 import './style.css';
 
@@ -15,7 +16,8 @@ import {
   nodeActiveColor,
   predecessorsColor,
 } from './style';
-import { initData } from './data';
+import { elements } from './data';
+import { dagreLayout } from './layout';
 
 var curSel = null;
 let curASCII = 69; // E
@@ -26,7 +28,7 @@ function GetNewID() {
 
 var cy = cytoscape({
   container: document.getElementById('cy'),
-  elements: initData,
+  elements: elements,
   style: [
     {
       selector: 'node',
@@ -42,18 +44,15 @@ var cy = cytoscape({
         width: edgeWidth,
         'curve-style': 'bezier',
         'line-color': edgeColor,
-        'source-arrow-color': edgeColor,
-        'source-arrow-shape': 'vee',
+        'target-arrow-shape': 'vee',
+        'target-arrow-color': edgeColor,
         'arrow-scale': arrowScale,
       },
     },
   ],
   layout: {
-    name: 'cose-bilkent',
-    animate: false,
-    gravityRangeCompound: 1.5,
-    fit: true,
-    tile: true,
+    name: 'dagre',
+    ...dagreLayout,
   },
 });
 
@@ -174,8 +173,8 @@ document
         group: 'edges',
         data: {
           id: `${parentId}->${newId}`,
-          source: newId,
-          target: parentId,
+          source: parentId,
+          target: newId,
         },
       },
     ]);
