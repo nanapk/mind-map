@@ -67,22 +67,14 @@ function calcTargetBonus(cy, element) {
 }
 
 function getPercentByPV(total) {
-  if (total < 20)
-    return 0.0;
-  else if (total < 60)
-    return 0.03;
-  else if (total < 120)
-    return 0.06;
-  else if (total < 240)
-    return 0.09;
-  else if (total < 400)
-    return 0.12;
-  else if (total < 680)
-    return 0.15;
-  else if (total < 1000)
-    return 0.18;
-  else
-    return 0.21;
+  if (total < 20) return 0.0;
+  else if (total < 60) return 0.03;
+  else if (total < 120) return 0.06;
+  else if (total < 240) return 0.09;
+  else if (total < 400) return 0.12;
+  else if (total < 680) return 0.15;
+  else if (total < 1000) return 0.18;
+  else return 0.21;
 }
 
 function calcTargetReward(cy, element, totalReward) {
@@ -100,9 +92,9 @@ function calcTargetReward(cy, element, totalReward) {
 export function getChildrenNodes(cy, element) {
   const myId = element.data('id');
   let children = [];
-  element.connectedEdges().forEach(function (target) {
-    if (target.target().data('id') == myId) {
-      children.push(target.source());
+  element.connectedEdges().forEach(function (edge) {
+    if (edge.source().data('id') == myId) {
+      children.push(edge.target());
     }
   });
   return children;
