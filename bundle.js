@@ -189,8 +189,8 @@ document.querySelector('.utility-button[action="delete"]').addEventListener('cli
   }
 
   var count = 0;
-  curSel.connectedEdges().forEach(function (target) {
-    if (target.target().data('id') == curSel.data('id')) {
+  curSel.connectedEdges().forEach(function (edge) {
+    if (edge.source().data('id') == curSel.data('id')) {
       count++;
     }
   });
