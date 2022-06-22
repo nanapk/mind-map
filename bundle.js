@@ -40,6 +40,12 @@ function GetNewID() {
   return String.fromCharCode(curASCII++);
 }
 
+function resetCurSel() {
+  resetFocus(cy, curSel);
+  curSel = null;
+  (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, curSel);
+}
+
 var cy = cytoscape__WEBPACK_IMPORTED_MODULE_0___default()({
   container: document.getElementById('cy'),
   elements: _data__WEBPACK_IMPORTED_MODULE_6__.elements,
@@ -97,8 +103,9 @@ cy.on('tap', function (e) {
 cy.on('taphold', function (e) {
   if (!isNode(e)) return;
   bTapHold = true;
-  var myId = e.target.data('id');
-  var myPV = e.target.data('pv');
+  var targetEl = e.target;
+  var myId = targetEl.data('id');
+  var myPV = targetEl.data('pv');
   (0,_common__WEBPACK_IMPORTED_MODULE_4__.showMenu)();
   var pvInput = document.querySelector('.pv-input');
   pvInput.value = myPV;
@@ -106,10 +113,11 @@ cy.on('taphold', function (e) {
 
   editButton.onclick = function () {
     var newPV = pvInput.value;
-    var id = e.target.data('id');
-    e.target.data('pv', newPV);
-    e.target.data('label', "".concat(id, "(").concat(newPV, ")"));
+    var id = targetEl.data('id');
+    targetEl.data('pv', newPV);
+    targetEl.data('label', "".concat(id, "(").concat(newPV, ")"));
     (0,_common__WEBPACK_IMPORTED_MODULE_4__.hideMenu)();
+    (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, targetEl);
   };
 });
 var resizeTimer;
@@ -181,6 +189,7 @@ document.querySelector('.utility-button[action="add"]').addEventListener('click'
       target: newId
     }
   }]);
+  resetCurSel();
 });
 document.querySelector('.utility-button[action="delete"]').addEventListener('click', function () {
   if (!curSel) {
@@ -201,6 +210,7 @@ document.querySelector('.utility-button[action="delete"]').addEventListener('cli
   }
 
   cy.remove(curSel);
+  resetCurSel();
 });
 
 /***/ }),
