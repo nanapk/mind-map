@@ -17442,9 +17442,9 @@ function calcTargetReward(cy, element, totalReward) {
 function getChildrenNodes(cy, element) {
   var myId = element.data('id');
   var children = [];
-  element.connectedEdges().forEach(function (target) {
-    if (target.target().data('id') == myId) {
-      children.push(target.source());
+  element.connectedEdges().forEach(function (edge) {
+    if (edge.source().data('id') == myId) {
+      children.push(edge.target());
     }
   });
   return children;
