@@ -67,31 +67,99 @@ body {
 }
 
 .menu {
-  padding: 10px;
+  padding: 30px 40px;
   z-index: 5;
-  border: 1px solid black;
   background-color: white;
   border-radius: 10px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* opacity: 1; */
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  border-radius: 20px;
 }
 
 .menu.show {
-  display: inline-block;
+  display: flex;
 }
 
 .menu.hide {
   display: none;
 }
 
-.menu-item,
-.edit-pv {
+.menu-header {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.menu-button {
   cursor: pointer;
 }
 
-.button-wrapper {
+.pv-input {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #333;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  border: 1px solid #808080;
+  outline: none;
+}
+
+.menu-button-wrapper {
+  display: flex;
+  justify-content: center;
   margin-top: 15px;
+}
+
+.menu-button {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.menu-button[action='close'] {
+  border: 1px solid #808080;
+  color: #808080;
+  background-color: white;
+  margin-right: 10px;
+}
+
+.menu-button[action='edit-pv'] {
+  background-color: #808080;
+  color: white;
+}
+
+.button-wrapper {
+  margin-top: 10px;
+}
+
+.utility-button {
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: rgba(51, 51, 51, 0.05);
+  border-width: 0;
+  color: #333333;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.utility-button:last-child {
+  margin-bottom: 0px;
 }

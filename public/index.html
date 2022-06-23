@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
     <title>수익구조</title>
   </head>
 
@@ -36,9 +42,12 @@
     </div>
     <div class="gray-background hide"></div>
     <div class="menu hide">
-      <div class="menu-item" action="close">닫기</div>
+      <span class="menu-header">PV 편집</span>
       <input class="pv-input" type="number" name="pv-input" />
-      <div class="edit-pv">확인</div>
+      <div class="menu-button-wrapper">
+        <div class="menu-button" action="close">취소</div>
+        <div class="menu-button" action="edit-pv">확인</div>
+      </div>
     </div>
   </body>
 </html>

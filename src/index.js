@@ -101,7 +101,7 @@ cy.on('taphold', function (e) {
   const pvInput = document.querySelector('.pv-input');
   pvInput.value = myPV;
 
-  const editButton = document.querySelector('.edit-pv');
+  const editButton = document.querySelector('.menu-button[action="edit-pv"]');
   editButton.onclick = function () {
     const newPV = pvInput.value;
     const id = targetEl.data('id');

@@ -19,7 +19,7 @@ export function hideMenu() {
 }
 
 document
-  .querySelector('.menu-item[action="close"]')
+  .querySelector('.menu-button[action="close"]')
   .addEventListener('click', function () {
     hideMenu();
   });
