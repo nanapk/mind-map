@@ -109,7 +109,7 @@ cy.on('taphold', function (e) {
   (0,_common__WEBPACK_IMPORTED_MODULE_4__.showMenu)();
   var pvInput = document.querySelector('.pv-input');
   pvInput.value = myPV;
-  var editButton = document.querySelector('.edit-pv');
+  var editButton = document.querySelector('.menu-button[action="edit-pv"]');
 
   editButton.onclick = function () {
     var newPV = pvInput.value;
@@ -17573,7 +17573,7 @@ function hideMenu() {
   hideElement('gray-background');
   hideElement('menu');
 }
-document.querySelector('.menu-item[action="close"]').addEventListener('click', function () {
+document.querySelector('.menu-button[action="close"]').addEventListener('click', function () {
   hideMenu();
 });
 
