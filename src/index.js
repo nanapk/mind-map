@@ -227,5 +227,6 @@ changeElementsButtons.forEach((el) => {
       name: 'dagre',
       ...dagreLayout,
     }).run();
+    resetCurSel();
   };
 });
