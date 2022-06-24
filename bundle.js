@@ -41,9 +41,11 @@ function GetNewID() {
 }
 
 function resetCurSel() {
-  resetFocus(cy, curSel);
-  curSel = null;
-  (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, curSel);
+  if (curSel) {
+    resetFocus(cy, curSel);
+    curSel = null;
+    (0,_bonus__WEBPACK_IMPORTED_MODULE_3__.applyTargetBonus)(cy, curSel);
+  }
 }
 
 var cy = cytoscape__WEBPACK_IMPORTED_MODULE_0___default()({
