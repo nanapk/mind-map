@@ -1,3 +1,5 @@
+import { makingNode, makingEdge, makingLOSMap } from './common';
+
 export const firstBonusData = [
   { total: 20, percentage: 3 },
   { total: 60, percentage: 6 },
@@ -8,50 +10,66 @@ export const firstBonusData = [
   { total: 1000, percentage: 21 },
 ];
 
-export const initData = [];
+export const makingLOSMapTree = (type) => {
+  let nodes = [];
+  let edges = [];
 
-export const elements = {
-  nodes: [
-    {
-      data: {
-        id: 'A',
-        pv: '20', // 만 단위
-        label: 'A(20)',
-      },
-    },
-    {
-      data: {
-        id: 'B',
-        pv: '20', // 만 단위
-        label: 'B(20)',
-      },
-    },
-    {
-      data: {
-        id: 'C',
-        pv: '20', // 만 단위
-        label: 'C(20)',
-      },
-    },
-    {
-      data: {
-        id: 'D',
-        pv: '20', // 만 단위
-        label: 'D(20)',
-      },
-    },
-  ],
-  edges: [
-    {
-      data: { id: 'A->B', source: 'A', target: 'B' },
-    },
+  switch (type) {
+    case 'bronzeBuilder': {
+      const sponsorOfRootSponsor = { id: 'A', pv: '20' };
+      const sponsorOfRootSponsorNode = makingNode(
+        sponsorOfRootSponsor.id,
+        sponsorOfRootSponsor.pv
+      );
+      nodes.push(sponsorOfRootSponsorNode);
 
-    {
-      data: { id: 'B->C', source: 'B', target: 'C' },
-    },
+      const rootSponsor = { id: 'B', pv: '40' };
+      const rootSponsorEdge = makingEdge(
+        sponsorOfRootSponsor.id,
+        rootSponsor.id
+      );
+      edges.push(rootSponsorEdge);
 
-    {
-      data: { id: 'B->D', source: 'B', target: 'D' },
-    },
-  ],
+      const group1 = [
+        { id: 'C', pv: '30' },
+        { id: 'D', pv: '30' },
+        { id: 'E', pv: '30' },
+        { id: 'F', pv: '30' },
+      ];
+      const group2 = [
+        { id: 'G', pv: '30' },
+        { id: 'H', pv: '40' },
+        { id: 'I', pv: '30' },
+        { id: 'J', pv: '20' },
+      ];
+      const group3 = [
+        { id: 'K', pv: '50' },
+        { id: 'L', pv: '30' },
+        { id: 'M', pv: '40' },
+        { id: 'N', pv: '30' },
+      ];
+      const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [
+        group1,
+        group2,
+        group3,
+      ]);
+
+      nodes.push(...mapNodes);
+      edges.push(...mapEdges);
+      break;
+    }
+    default: {
+      const rootSponsor = { id: 'A', pv: '20' };
+      const group = [
+        { id: 'B', pv: '20' },
+        { id: 'C', pv: '20' },
+        { id: 'D', pv: '20' },
+      ];
+      const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [group]);
+      nodes.push(...mapNodes);
+      edges.push(...mapEdges);
+      break;
+    }
+  }
+  return { nodes, edges };
 };

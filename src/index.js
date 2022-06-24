@@ -16,7 +16,7 @@ import {
   nodeActiveColor,
   successorsColor,
 } from './style';
-import { elements } from './data';
+import { makingLOSMapTree } from './data';
 import { dagreLayout } from './layout';
 
 var curSel = null;
@@ -34,7 +34,7 @@ function resetCurSel() {
 
 var cy = cytoscape({
   container: document.getElementById('cy'),
-  elements: elements,
+  elements: makingLOSMapTree('default'),
   style: [
     {
       selector: 'node',
@@ -211,3 +211,21 @@ document
     cy.remove(curSel);
     resetCurSel();
   });
+
+const changeElementsButtons = document.querySelectorAll(
+  '.utility-button[action="change-elements"]'
+);
+changeElementsButtons.forEach((el) => {
+  el.onclick = function () {
+    const type = this.getAttribute('type');
+    if (type === 'bronze-builder') {
+      cy.json({ elements: makingLOSMapTree('bronzeBuilder') });
+    } else if (type === 'default') {
+      cy.json({ elements: makingLOSMapTree('default') });
+    }
+    cy.layout({
+      name: 'dagre',
+      ...dagreLayout,
+    }).run();
+  };
+});
