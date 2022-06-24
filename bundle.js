@@ -230,6 +230,7 @@ changeElementsButtons.forEach(function (el) {
     cy.layout(_objectSpread({
       name: 'dagre'
     }, _layout__WEBPACK_IMPORTED_MODULE_7__.dagreLayout)).run();
+    resetCurSel();
   };
 });
 
