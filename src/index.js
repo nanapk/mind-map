@@ -220,7 +220,12 @@ const changeElementsButtons = document.querySelectorAll(
 changeElementsButtons.forEach((el) => {
   el.onclick = function () {
     const type = this.getAttribute('type');
-    if (type === 'bronze-builder') {
+
+    if (type === 'bronze-foundation-1') {
+      cy.json({ elements: makingLOSMapTree('bronzeFoundation1') });
+    } else if (type === 'bronze-foundation-2') {
+      cy.json({ elements: makingLOSMapTree('bronzeFoundation2') });
+    } else if (type === 'bronze-builder') {
       cy.json({ elements: makingLOSMapTree('bronzeBuilder') });
     } else if (type === 'default') {
       cy.json({ elements: makingLOSMapTree('default') });

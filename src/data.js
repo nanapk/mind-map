@@ -15,6 +15,60 @@ export const makingLOSMapTree = (type) => {
   let edges = [];
 
   switch (type) {
+    case 'bronzeFoundation1': {
+      const rootSponsor = { id: 'A', pv: '20' };
+      const group = [
+        { id: 'B', pv: '40' },
+        { id: 'C', pv: '40' },
+        { id: 'D', pv: '40' },
+      ];
+
+      const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [group]);
+      nodes.push(...mapNodes);
+      edges.push(...mapEdges);
+
+      break;
+    }
+
+    case 'bronzeFoundation2': {
+      const sponsorOfRootSponsor = { id: 'A', pv: '20' };
+      const sponsorOfRootSponsorNode = makingNode(
+        sponsorOfRootSponsor.id,
+        sponsorOfRootSponsor.pv
+      );
+      nodes.push(sponsorOfRootSponsorNode);
+
+      const rootSponsor = { id: 'B', pv: '20' };
+      const rootSponsorEdge = makingEdge(
+        sponsorOfRootSponsor.id,
+        rootSponsor.id
+      );
+      edges.push(rootSponsorEdge);
+
+      const group1 = [
+        { id: 'C', pv: '20' },
+        { id: 'D', pv: '20' },
+      ];
+      const group2 = [
+        { id: 'E', pv: '20' },
+        { id: 'F', pv: '20' },
+      ];
+      const group3 = [
+        { id: 'G', pv: '20' },
+        { id: 'H', pv: '20' },
+      ];
+
+      const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [
+        group1,
+        group2,
+        group3,
+      ]);
+
+      nodes.push(...mapNodes);
+      edges.push(...mapEdges);
+      break;
+    }
+
     case 'bronzeBuilder': {
       const sponsorOfRootSponsor = { id: 'A', pv: '20' };
       const sponsorOfRootSponsorNode = makingNode(
@@ -58,6 +112,7 @@ export const makingLOSMapTree = (type) => {
       edges.push(...mapEdges);
       break;
     }
+
     default: {
       const rootSponsor = { id: 'A', pv: '20' };
       const group = [
