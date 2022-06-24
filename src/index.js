@@ -27,9 +27,11 @@ function GetNewID() {
 }
 
 function resetCurSel() {
-  resetFocus(cy, curSel);
-  curSel = null;
-  applyTargetBonus(cy, curSel);
+  if (curSel) {
+    resetFocus(cy, curSel);
+    curSel = null;
+    applyTargetBonus(cy, curSel);
+  }
 }
 
 var cy = cytoscape({
