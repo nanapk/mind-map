@@ -48,7 +48,7 @@ function resetCurSel() {
 
 var cy = cytoscape__WEBPACK_IMPORTED_MODULE_0___default()({
   container: document.getElementById('cy'),
-  elements: _data__WEBPACK_IMPORTED_MODULE_6__.elements,
+  elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('default'),
   style: [{
     selector: 'node',
     style: {
@@ -211,6 +211,26 @@ document.querySelector('.utility-button[action="delete"]').addEventListener('cli
 
   cy.remove(curSel);
   resetCurSel();
+});
+var changeElementsButtons = document.querySelectorAll('.utility-button[action="change-elements"]');
+changeElementsButtons.forEach(function (el) {
+  el.onclick = function () {
+    var type = this.getAttribute('type');
+
+    if (type === 'bronze-builder') {
+      cy.json({
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeBuilder')
+      });
+    } else if (type === 'default') {
+      cy.json({
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('default')
+      });
+    }
+
+    cy.layout(_objectSpread({
+      name: 'dagre'
+    }, _layout__WEBPACK_IMPORTED_MODULE_7__.dagreLayout)).run();
+  };
 });
 
 /***/ }),
@@ -17468,9 +17488,30 @@ function getChildrenNodes(cy, element) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "firstBonusData": () => /* binding */ firstBonusData,
-/* harmony export */   "initData": () => /* binding */ initData,
-/* harmony export */   "elements": () => /* binding */ elements
+/* harmony export */   "makingLOSMapTree": () => /* binding */ makingLOSMapTree
 /* harmony export */ });
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(297);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 var firstBonusData = [{
   total: 20,
   percentage: 3
@@ -17493,56 +17534,107 @@ var firstBonusData = [{
   total: 1000,
   percentage: 21
 }];
-var initData = [];
-var elements = {
-  nodes: [{
-    data: {
-      id: 'A',
-      pv: '20',
-      // 만 단위
-      label: 'A(20)'
-    }
-  }, {
-    data: {
-      id: 'B',
-      pv: '20',
-      // 만 단위
-      label: 'B(20)'
-    }
-  }, {
-    data: {
-      id: 'C',
-      pv: '20',
-      // 만 단위
-      label: 'C(20)'
-    }
-  }, {
-    data: {
-      id: 'D',
-      pv: '20',
-      // 만 단위
-      label: 'D(20)'
-    }
-  }],
-  edges: [{
-    data: {
-      id: 'A->B',
-      source: 'A',
-      target: 'B'
-    }
-  }, {
-    data: {
-      id: 'B->C',
-      source: 'B',
-      target: 'C'
-    }
-  }, {
-    data: {
-      id: 'B->D',
-      source: 'B',
-      target: 'D'
-    }
-  }]
+var makingLOSMapTree = function makingLOSMapTree(type) {
+  var nodes = [];
+  var edges = [];
+
+  switch (type) {
+    case 'bronzeBuilder':
+      {
+        var sponsorOfRootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+        var sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(sponsorOfRootSponsor.id, sponsorOfRootSponsor.pv);
+        nodes.push(sponsorOfRootSponsorNode);
+        var rootSponsor = {
+          id: 'B',
+          pv: '40'
+        };
+        var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, rootSponsor.id);
+        edges.push(rootSponsorEdge);
+        var group1 = [{
+          id: 'C',
+          pv: '30'
+        }, {
+          id: 'D',
+          pv: '30'
+        }, {
+          id: 'E',
+          pv: '30'
+        }, {
+          id: 'F',
+          pv: '30'
+        }];
+        var group2 = [{
+          id: 'G',
+          pv: '30'
+        }, {
+          id: 'H',
+          pv: '40'
+        }, {
+          id: 'I',
+          pv: '30'
+        }, {
+          id: 'J',
+          pv: '20'
+        }];
+        var group3 = [{
+          id: 'K',
+          pv: '50'
+        }, {
+          id: 'L',
+          pv: '30'
+        }, {
+          id: 'M',
+          pv: '40'
+        }, {
+          id: 'N',
+          pv: '30'
+        }];
+
+        var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group1, group2, group3]),
+            _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2),
+            mapNodes = _makingLOSMap2[0],
+            mapEdges = _makingLOSMap2[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(mapNodes));
+        edges.push.apply(edges, _toConsumableArray(mapEdges));
+        break;
+      }
+
+    default:
+      {
+        var _rootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+        var group = [{
+          id: 'B',
+          pv: '20'
+        }, {
+          id: 'C',
+          pv: '20'
+        }, {
+          id: 'D',
+          pv: '20'
+        }];
+
+        var _makingLOSMap3 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor, [group]),
+            _makingLOSMap4 = _slicedToArray(_makingLOSMap3, 2),
+            _mapNodes = _makingLOSMap4[0],
+            _mapEdges = _makingLOSMap4[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges));
+        break;
+      }
+  }
+
+  return {
+    nodes: nodes,
+    edges: edges
+  };
 };
 
 /***/ }),
@@ -17555,8 +17647,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "showElement": () => /* binding */ showElement,
 /* harmony export */   "hideElement": () => /* binding */ hideElement,
 /* harmony export */   "showMenu": () => /* binding */ showMenu,
-/* harmony export */   "hideMenu": () => /* binding */ hideMenu
+/* harmony export */   "hideMenu": () => /* binding */ hideMenu,
+/* harmony export */   "makingEdge": () => /* binding */ makingEdge,
+/* harmony export */   "makingNode": () => /* binding */ makingNode,
+/* harmony export */   "makingLOSMap": () => /* binding */ makingLOSMap
 /* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function showElement(className) {
   document.querySelector(".".concat(className)).classList.add('show');
   document.querySelector(".".concat(className)).classList.remove('hide');
@@ -17572,6 +17687,65 @@ function showMenu() {
 function hideMenu() {
   hideElement('gray-background');
   hideElement('menu');
+}
+function makingEdge(source, target) {
+  return {
+    data: {
+      id: "".concat(source, "->").concat(target),
+      source: source,
+      target: target
+    }
+  };
+}
+function makingNode(id, pv) {
+  return {
+    data: {
+      id: id,
+      pv: pv,
+      label: "".concat(id, "(").concat(pv, ")")
+    }
+  };
+}
+
+function makingGroup(group) {
+  var sponsor = Object.assign(group[0]);
+  var partners = group.slice(1);
+  var groupNodes = group.map(function (member) {
+    return makingNode(member.id, member.pv);
+  });
+  var groupEdges = partners.map(function (member) {
+    return makingEdge(sponsor.id, member.id);
+  });
+  return [groupNodes, groupEdges, sponsor];
+}
+
+function connectingSponsorsAndRootSponsor(sponsors, rootSponsor) {
+  return sponsors.map(function (sponsor) {
+    return makingEdge(rootSponsor.data.id, sponsor.id);
+  });
+}
+
+function makingLOSMap(root, groups) {
+  var rootSponsorNode = makingNode(root.id, root.pv);
+  var nodes = [rootSponsorNode];
+  var edges = [];
+  var sponsorGroup = [];
+
+  for (var i = 0; i < groups.length; i++) {
+    var _makingGroup = makingGroup(groups[i]),
+        _makingGroup2 = _slicedToArray(_makingGroup, 3),
+        groupNodes = _makingGroup2[0],
+        groupEdges = _makingGroup2[1],
+        sponsor = _makingGroup2[2];
+
+    nodes.push.apply(nodes, _toConsumableArray(groupNodes));
+    edges.push.apply(edges, _toConsumableArray(groupEdges));
+    sponsorGroup.push(sponsor);
+  }
+
+  var sponsorEdges = connectingSponsorsAndRootSponsor(sponsorGroup, rootSponsorNode);
+  edges.push.apply(edges, _toConsumableArray(sponsorEdges));
+  return [nodes, edges];
 }
 document.querySelector('.menu-button[action="close"]').addEventListener('click', function () {
   hideMenu();
