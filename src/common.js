@@ -80,3 +80,46 @@ document
   .addEventListener('click', function () {
     hideMenu();
   });
+
+export function getNewId(cy) {
+  const ALPHABET_COUNT = 26;
+  const CAPITAL_A_ASCII = 65;
+  const SMALL_A_ASCII = 97;
+  const capitalASCIIArray = Array.from(
+    new Array(ALPHABET_COUNT),
+    (x, i) => i + CAPITAL_A_ASCII
+  );
+  const smallASCIIArray = Array.from(
+    new Array(ALPHABET_COUNT),
+    (x, i) => i + SMALL_A_ASCII
+  );
+
+  const nodesASCII = [];
+  cy.nodes((node) => {
+    const nodeIdASCII = node.data('id').charCodeAt();
+    nodesASCII.push(nodeIdASCII);
+  });
+
+  let resultASCII = null;
+  let find = false;
+  for (let i = 0; i < capitalASCIIArray.length; i++) {
+    if (!nodesASCII.includes(capitalASCIIArray[i])) {
+      resultASCII = capitalASCIIArray[i];
+      find = true;
+      break;
+    }
+  }
+
+  if (!find) {
+    for (let i = 0; i < smallASCIIArray.length; i++) {
+      if (!nodesASCII.includes(smallASCIIArray[i])) {
+        resultASCII = smallASCIIArray[i];
+        find = true;
+        break;
+      }
+    }
+  }
+
+  if (find) return String.fromCharCode(resultASCII);
+  else return '';
+}

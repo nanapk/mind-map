@@ -7,7 +7,7 @@ cytoscape.use(dagre);
 import './style.css';
 
 import { makingFirstBonusChart, applyTargetBonus } from './bonus';
-import { showMenu, hideMenu } from './common';
+import { showMenu, hideMenu, getNewId } from './common';
 import {
   edgeWidth,
   arrowScale,
@@ -20,11 +20,6 @@ import { makingLOSMapTree } from './data';
 import { dagreLayout } from './layout';
 
 var curSel = null;
-let curASCII = 69; // E
-function GetNewID() {
-  if (curASCII == 91) curASCII = 97;
-  return String.fromCharCode(curASCII++);
-}
 
 function resetCurSel() {
   if (curSel) {
@@ -159,15 +154,15 @@ document
       return;
     }
 
-    if (curASCII === 123) {
-      alert('더 이상 추가할 수 없습니다.');
-      return;
-    }
-
     const parentId = curSel.data('id');
     const parentPos = curSel.position();
 
-    const newId = GetNewID(curASCII);
+    const newId = getNewId(cy);
+
+    if (!newId) {
+      alert('더 이상 추가할 수 없습니다.');
+      return;
+    }
 
     cy.add([
       {
