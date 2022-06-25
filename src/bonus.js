@@ -22,7 +22,6 @@ export function makingFirstBonusChart() {
   });
 }
 
-let totalPv = 0;
 export function applyTargetBonus(cy, element) {
   if (cy == null || element == null) {
     const curSelDiv = document.querySelector('.cur-sel');
@@ -31,6 +30,10 @@ export function applyTargetBonus(cy, element) {
     curPvDiv.innerHTML = '0 만';
     const curPaybackDiv = document.querySelector('.cur-payback');
     curPaybackDiv.innerHTML = '0 %';
+    const curReward1stDiv = document.querySelector('.cur-reward-1st');
+    curReward1stDiv.innerHTML = '0 만원';
+    const curReward2ndDiv = document.querySelector('.cur-reward-2nd');
+    curReward2ndDiv.innerHTML = '0 만원';
     const curRewardDiv = document.querySelector('.cur-reward');
     curRewardDiv.innerHTML = '0 만원';
     return;
@@ -39,19 +42,30 @@ export function applyTargetBonus(cy, element) {
   const curSelDiv = document.querySelector('.cur-sel');
   curSelDiv.innerHTML = element.data('label');
 
-  totalPv = parseInt(element.data('pv'));
-  calcTargetBonus(cy, element);
-  const targetPv = totalPv;
+  const {totalPv, ratio, reward1st} = calc1stBonus(cy, element);
   const curPvDiv = document.querySelector('.cur-pv');
-  curPvDiv.innerHTML = `${targetPv} 만`;
-
-  let ratio = getPercentByPV(targetPv);
+  curPvDiv.innerHTML = `${totalPv} 만`;
   const curPaybackDiv = document.querySelector('.cur-payback');
   curPaybackDiv.innerHTML = `${ratio * 100} %`;
-
-  const reward = calcTargetReward(cy, element, ratio * targetPv);
+  const curReward1stDiv = document.querySelector('.cur-reward-1st');
+  curReward1stDiv.innerHTML = `${reward1st.toFixed(1)} 만원`;
+  
+  const reward2nd = calc2ndBonus(cy, element, totalPv, reward1st);
+  const curReward2ndDiv = document.querySelector('.cur-reward-2nd');
+  curReward2ndDiv.innerHTML = `${reward2nd.toFixed(1)} 만원`;
+  
   const curRewardDiv = document.querySelector('.cur-reward');
-  curRewardDiv.innerHTML = `${reward.toFixed(1)} 만원`;
+  curRewardDiv.innerHTML = `${(reward1st + reward2nd).toFixed(1)} 만원`;
+}
+
+let tempPv = 0;
+function calc1stBonus(cy, element) {
+  tempPv = parseInt(element.data('pv'));
+  calcTargetBonus(cy, element);
+  const totalPv = tempPv;
+  let ratio = getPercentByPV(totalPv);
+  const reward1st = calcTargetReward(cy, element, ratio * totalPv);
+  return { totalPv, ratio, reward1st };
 }
 
 function calcTargetBonus(cy, element) {
@@ -61,7 +75,7 @@ function calcTargetBonus(cy, element) {
       calcTargetBonus(cy, child);
     } else {
       calcTargetBonus(cy, child);
-      totalPv += parseInt(child.data('pv'));
+      tempPv += parseInt(child.data('pv'));
     }
   });
 }
@@ -80,9 +94,9 @@ function getPercentByPV(total) {
 function calcTargetReward(cy, element, totalReward) {
   const children = getChildrenNodes(cy, element);
   children.forEach(function (child) {
-    totalPv = parseInt(child.data('pv'));
+    tempPv = parseInt(child.data('pv'));
     calcTargetBonus(cy, child);
-    const childPv = totalPv;
+    const childPv = tempPv;
     const childRatio = getPercentByPV(childPv);
     totalReward -= childPv * childRatio;
   });
@@ -98,4 +112,28 @@ export function getChildrenNodes(cy, element) {
     }
   });
   return children;
+}
+
+function calc2ndBonus(cy, element, totalPv, reward1st) {
+  // total PV가 400만 인가?
+  if (totalPv < 400)
+    return 0;
+
+  // 60만 pv 달성한 leg가 3개인가?
+  const children = getChildrenNodes(cy, element);
+  if (children.length < 3)
+    return 0;
+
+  let bFail = false;
+  children.forEach(function (child) {
+    tempPv = parseInt(child.data('pv'));
+    calcTargetBonus(cy, child);
+    console.log(tempPv);
+    if (tempPv < 60) bFail = true;
+  });
+  if (bFail)
+    return 0;
+
+  console.log("Bronze Builder!!");
+  return reward1st * 0.3;
 }
