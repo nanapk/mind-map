@@ -33,12 +33,6 @@ cytoscape__WEBPACK_IMPORTED_MODULE_0___default().use((cytoscape_dagre__WEBPACK_I
 
 
 var curSel = null;
-var curASCII = 69; // E
-
-function GetNewID() {
-  if (curASCII == 91) curASCII = 97;
-  return String.fromCharCode(curASCII++);
-}
 
 function resetCurSel() {
   if (curSel) {
@@ -163,14 +157,15 @@ document.querySelector('.utility-button[action="add"]').addEventListener('click'
     return;
   }
 
-  if (curASCII === 123) {
+  var parentId = curSel.data('id');
+  var parentPos = curSel.position();
+  var newId = (0,_common__WEBPACK_IMPORTED_MODULE_4__.getNewId)(cy);
+
+  if (!newId) {
     alert('더 이상 추가할 수 없습니다.');
     return;
   }
 
-  var parentId = curSel.data('id');
-  var parentPos = curSel.position();
-  var newId = GetNewID(curASCII);
   cy.add([{
     group: 'nodes',
     data: {
@@ -219,7 +214,15 @@ changeElementsButtons.forEach(function (el) {
   el.onclick = function () {
     var type = this.getAttribute('type');
 
-    if (type === 'bronze-builder') {
+    if (type === 'bronze-foundation-1') {
+      cy.json({
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeFoundation1')
+      });
+    } else if (type === 'bronze-foundation-2') {
+      cy.json({
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeFoundation2')
+      });
+    } else if (type === 'bronze-builder') {
       cy.json({
         elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeBuilder')
       });
@@ -17408,7 +17411,6 @@ function makingFirstBonusChart() {
     firstBonusChartDiv.appendChild(wrapper);
   });
 }
-var totalPv = 0;
 function applyTargetBonus(cy, element) {
   if (cy == null || element == null) {
     var _curSelDiv = document.querySelector('.cur-sel');
@@ -17423,6 +17425,14 @@ function applyTargetBonus(cy, element) {
 
     _curPaybackDiv.innerHTML = '0 %';
 
+    var _curReward1stDiv = document.querySelector('.cur-reward-1st');
+
+    _curReward1stDiv.innerHTML = '0 만원';
+
+    var _curReward2ndDiv = document.querySelector('.cur-reward-2nd');
+
+    _curReward2ndDiv.innerHTML = '0 만원';
+
     var _curRewardDiv = document.querySelector('.cur-reward');
 
     _curRewardDiv.innerHTML = '0 만원';
@@ -17431,17 +17441,37 @@ function applyTargetBonus(cy, element) {
 
   var curSelDiv = document.querySelector('.cur-sel');
   curSelDiv.innerHTML = element.data('label');
-  totalPv = parseInt(element.data('pv'));
-  calcTargetBonus(cy, element);
-  var targetPv = totalPv;
+
+  var _calc1stBonus = calc1stBonus(cy, element),
+      totalPv = _calc1stBonus.totalPv,
+      ratio = _calc1stBonus.ratio,
+      reward1st = _calc1stBonus.reward1st;
+
   var curPvDiv = document.querySelector('.cur-pv');
-  curPvDiv.innerHTML = "".concat(targetPv, " \uB9CC");
-  var ratio = getPercentByPV(targetPv);
+  curPvDiv.innerHTML = "".concat(totalPv, " \uB9CC");
   var curPaybackDiv = document.querySelector('.cur-payback');
   curPaybackDiv.innerHTML = "".concat(ratio * 100, " %");
-  var reward = calcTargetReward(cy, element, ratio * targetPv);
+  var curReward1stDiv = document.querySelector('.cur-reward-1st');
+  curReward1stDiv.innerHTML = "".concat(reward1st.toFixed(1), " \uB9CC\uC6D0");
+  var reward2nd = calc2ndBonus(cy, element, totalPv, reward1st);
+  var curReward2ndDiv = document.querySelector('.cur-reward-2nd');
+  curReward2ndDiv.innerHTML = "".concat(reward2nd.toFixed(1), " \uB9CC\uC6D0");
   var curRewardDiv = document.querySelector('.cur-reward');
-  curRewardDiv.innerHTML = "".concat(reward.toFixed(1), " \uB9CC\uC6D0");
+  curRewardDiv.innerHTML = "".concat((reward1st + reward2nd).toFixed(1), " \uB9CC\uC6D0");
+}
+var tempPv = 0;
+
+function calc1stBonus(cy, element) {
+  tempPv = parseInt(element.data('pv'));
+  calcTargetBonus(cy, element);
+  var totalPv = tempPv;
+  var ratio = getPercentByPV(totalPv);
+  var reward1st = calcTargetReward(cy, element, ratio * totalPv);
+  return {
+    totalPv: totalPv,
+    ratio: ratio,
+    reward1st: reward1st
+  };
 }
 
 function calcTargetBonus(cy, element) {
@@ -17451,7 +17481,7 @@ function calcTargetBonus(cy, element) {
       calcTargetBonus(cy, child);
     } else {
       calcTargetBonus(cy, child);
-      totalPv += parseInt(child.data('pv'));
+      tempPv += parseInt(child.data('pv'));
     }
   });
 }
@@ -17463,9 +17493,9 @@ function getPercentByPV(total) {
 function calcTargetReward(cy, element, totalReward) {
   var children = getChildrenNodes(cy, element);
   children.forEach(function (child) {
-    totalPv = parseInt(child.data('pv'));
+    tempPv = parseInt(child.data('pv'));
     calcTargetBonus(cy, child);
-    var childPv = totalPv;
+    var childPv = tempPv;
     var childRatio = getPercentByPV(childPv);
     totalReward -= childPv * childRatio;
   });
@@ -17481,6 +17511,24 @@ function getChildrenNodes(cy, element) {
     }
   });
   return children;
+}
+
+function calc2ndBonus(cy, element, totalPv, reward1st) {
+  // total PV가 400만 인가?
+  if (totalPv < 400) return 0; // 60만 pv 달성한 leg가 3개인가?
+
+  var children = getChildrenNodes(cy, element);
+  if (children.length < 3) return 0;
+  var bFail = false;
+  children.forEach(function (child) {
+    tempPv = parseInt(child.data('pv'));
+    calcTargetBonus(cy, child);
+    console.log(tempPv);
+    if (tempPv < 60) bFail = true;
+  });
+  if (bFail) return 0;
+  console.log("Bronze Builder!!");
+  return reward1st * 0.3;
 }
 
 /***/ }),
@@ -17542,7 +17590,34 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
   var edges = [];
 
   switch (type) {
-    case 'bronzeBuilder':
+    case 'bronzeFoundation1':
+      {
+        var rootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+        var group = [{
+          id: 'B',
+          pv: '40'
+        }, {
+          id: 'C',
+          pv: '40'
+        }, {
+          id: 'D',
+          pv: '40'
+        }];
+
+        var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group]),
+            _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2),
+            mapNodes = _makingLOSMap2[0],
+            mapEdges = _makingLOSMap2[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(mapNodes));
+        edges.push.apply(edges, _toConsumableArray(mapEdges));
+        break;
+      }
+
+    case 'bronzeFoundation2':
       {
         var sponsorOfRootSponsor = {
           id: 'A',
@@ -17550,13 +17625,63 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
         };
         var sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(sponsorOfRootSponsor.id, sponsorOfRootSponsor.pv);
         nodes.push(sponsorOfRootSponsorNode);
-        var rootSponsor = {
+        var _rootSponsor = {
+          id: 'B',
+          pv: '20'
+        };
+        var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, _rootSponsor.id);
+        edges.push(rootSponsorEdge);
+        var group1 = [{
+          id: 'C',
+          pv: '20'
+        }, {
+          id: 'D',
+          pv: '20'
+        }];
+        var group2 = [{
+          id: 'E',
+          pv: '20'
+        }, {
+          id: 'F',
+          pv: '20'
+        }];
+        var group3 = [{
+          id: 'G',
+          pv: '20'
+        }, {
+          id: 'H',
+          pv: '20'
+        }];
+
+        var _makingLOSMap3 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor, [group1, group2, group3]),
+            _makingLOSMap4 = _slicedToArray(_makingLOSMap3, 2),
+            _mapNodes = _makingLOSMap4[0],
+            _mapEdges = _makingLOSMap4[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges));
+        break;
+      }
+
+    case 'bronzeBuilder':
+      {
+        var _sponsorOfRootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+
+        var _sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(_sponsorOfRootSponsor.id, _sponsorOfRootSponsor.pv);
+
+        nodes.push(_sponsorOfRootSponsorNode);
+        var _rootSponsor2 = {
           id: 'B',
           pv: '40'
         };
-        var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, rootSponsor.id);
-        edges.push(rootSponsorEdge);
-        var group1 = [{
+
+        var _rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(_sponsorOfRootSponsor.id, _rootSponsor2.id);
+
+        edges.push(_rootSponsorEdge);
+        var _group = [{
           id: 'C',
           pv: '30'
         }, {
@@ -17569,7 +17694,7 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
           id: 'F',
           pv: '30'
         }];
-        var group2 = [{
+        var _group2 = [{
           id: 'G',
           pv: '30'
         }, {
@@ -17582,7 +17707,7 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
           id: 'J',
           pv: '20'
         }];
-        var group3 = [{
+        var _group3 = [{
           id: 'K',
           pv: '50'
         }, {
@@ -17596,23 +17721,23 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
           pv: '30'
         }];
 
-        var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group1, group2, group3]),
-            _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2),
-            mapNodes = _makingLOSMap2[0],
-            mapEdges = _makingLOSMap2[1];
+        var _makingLOSMap5 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor2, [_group, _group2, _group3]),
+            _makingLOSMap6 = _slicedToArray(_makingLOSMap5, 2),
+            _mapNodes2 = _makingLOSMap6[0],
+            _mapEdges2 = _makingLOSMap6[1];
 
-        nodes.push.apply(nodes, _toConsumableArray(mapNodes));
-        edges.push.apply(edges, _toConsumableArray(mapEdges));
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes2));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges2));
         break;
       }
 
     default:
       {
-        var _rootSponsor = {
+        var _rootSponsor3 = {
           id: 'A',
           pv: '20'
         };
-        var group = [{
+        var _group4 = [{
           id: 'B',
           pv: '20'
         }, {
@@ -17623,13 +17748,13 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
           pv: '20'
         }];
 
-        var _makingLOSMap3 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor, [group]),
-            _makingLOSMap4 = _slicedToArray(_makingLOSMap3, 2),
-            _mapNodes = _makingLOSMap4[0],
-            _mapEdges = _makingLOSMap4[1];
+        var _makingLOSMap7 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor3, [_group4]),
+            _makingLOSMap8 = _slicedToArray(_makingLOSMap7, 2),
+            _mapNodes3 = _makingLOSMap8[0],
+            _mapEdges3 = _makingLOSMap8[1];
 
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges));
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes3));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges3));
         break;
       }
   }
@@ -17653,7 +17778,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "hideMenu": () => /* binding */ hideMenu,
 /* harmony export */   "makingEdge": () => /* binding */ makingEdge,
 /* harmony export */   "makingNode": () => /* binding */ makingNode,
-/* harmony export */   "makingLOSMap": () => /* binding */ makingLOSMap
+/* harmony export */   "makingLOSMap": () => /* binding */ makingLOSMap,
+/* harmony export */   "getNewId": () => /* binding */ getNewId
 /* harmony export */ });
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -17753,6 +17879,44 @@ function makingLOSMap(root, groups) {
 document.querySelector('.menu-button[action="close"]').addEventListener('click', function () {
   hideMenu();
 });
+function getNewId(cy) {
+  var ALPHABET_COUNT = 26;
+  var CAPITAL_A_ASCII = 65;
+  var SMALL_A_ASCII = 97;
+  var capitalASCIIArray = Array.from(new Array(ALPHABET_COUNT), function (x, i) {
+    return i + CAPITAL_A_ASCII;
+  });
+  var smallASCIIArray = Array.from(new Array(ALPHABET_COUNT), function (x, i) {
+    return i + SMALL_A_ASCII;
+  });
+  var nodesASCII = [];
+  cy.nodes(function (node) {
+    var nodeIdASCII = node.data('id').charCodeAt();
+    nodesASCII.push(nodeIdASCII);
+  });
+  var resultASCII = null;
+  var find = false;
+
+  for (var i = 0; i < capitalASCIIArray.length; i++) {
+    if (!nodesASCII.includes(capitalASCIIArray[i])) {
+      resultASCII = capitalASCIIArray[i];
+      find = true;
+      break;
+    }
+  }
+
+  if (!find) {
+    for (var _i2 = 0; _i2 < smallASCIIArray.length; _i2++) {
+      if (!nodesASCII.includes(smallASCIIArray[_i2])) {
+        resultASCII = smallASCIIArray[_i2];
+        find = true;
+        break;
+      }
+    }
+  }
+
+  if (find) return String.fromCharCode(resultASCII);else return '';
+}
 
 /***/ }),
 /* 298 */

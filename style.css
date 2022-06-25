@@ -160,6 +160,11 @@ body {
   user-select: none;
 }
 
+.utility-button[action='change-elements'] {
+  background-color: #808080;
+  color: white;
+}
+
 .utility-button:last-child {
   margin-bottom: 0px;
 }
