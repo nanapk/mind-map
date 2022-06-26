@@ -2,7 +2,7 @@ html,
 body,
 #cy {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 20px);
 }
 body {
   margin: 0;
@@ -143,9 +143,7 @@ body {
 }
 
 .utility-button {
-  margin-bottom: 10px;
   padding: 10px;
-  display: flex;
   justify-content: center;
   border-radius: 10px;
   background-color: rgba(51, 51, 51, 0.05);
@@ -165,7 +163,51 @@ body {
   color: white;
 }
 
-.utility-button:last-child {
+.left-button {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.left-button:last-child {
   margin-bottom: 0px;
 }
 
+.bottom-button {
+  display: inline-block;
+  margin: 10px 0px 0px 10px;
+}
+
+@media ( max-width: 720px ) {
+  .first-bonus-chart {
+    font-size: 12px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .target-bonus-info {
+    font-size: 12px;
+  }
+
+  .left-info {
+    top: 10px;
+    left: 10px;
+  }
+
+  .utility-button {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+  }
+
+  #cy {
+    height: calc(100% - 5px);
+  }
+
+  .left-button[action='change-elements'] {
+    display: none;
+  }
+
+  .bottom-button {
+    margin: 5px 0px 0px 5px;
+  }
+}

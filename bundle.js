@@ -17598,13 +17598,16 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
         };
         var group = [{
           id: 'B',
-          pv: '40'
+          pv: '20'
         }, {
           id: 'C',
           pv: '40'
         }, {
           id: 'D',
           pv: '40'
+        }, {
+          id: 'E',
+          pv: '20'
         }];
 
         var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group]),
