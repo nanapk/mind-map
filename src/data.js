@@ -18,9 +18,10 @@ export const makingLOSMapTree = (type) => {
     case 'bronzeFoundation1': {
       const rootSponsor = { id: 'A', pv: '20' };
       const group = [
-        { id: 'B', pv: '40' },
+        { id: 'B', pv: '20' },
         { id: 'C', pv: '40' },
         { id: 'D', pv: '40' },
+        { id: 'E', pv: '20' },
       ];
 
       const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [group]);
