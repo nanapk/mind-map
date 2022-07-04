@@ -98,7 +98,7 @@ export const makingLOSMapTree = (type) => {
         { id: 'J', pv: '20' },
       ];
       const group3 = [
-        { id: 'K', pv: '50' },
+        { id: 'K', pv: '20' },
         { id: 'L', pv: '30' },
         { id: 'M', pv: '40' },
         { id: 'N', pv: '30' },
