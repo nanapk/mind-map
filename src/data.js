@@ -16,12 +16,13 @@ export const makingLOSMapTree = (type) => {
 
   switch (type) {
     case 'bronzeFoundation1': {
+      // B.F: 그룹 PV 120만, 3명이상이 20만 PV를 달성해 3%의 1차 보너스를 받고 있을 경우
       const rootSponsor = { id: 'A', pv: '20' };
       const group = [
-        { id: 'B', pv: '20' },
-        { id: 'C', pv: '40' },
-        { id: 'D', pv: '40' },
-        { id: 'E', pv: '20' },
+        { id: 'B', pv: '30' },
+        { id: 'C', pv: '30' },
+        { id: 'D', pv: '30' },
+        { id: 'E', pv: '30' },
       ];
 
       const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [group]);
@@ -71,6 +72,7 @@ export const makingLOSMapTree = (type) => {
     }
 
     case 'bronzeBuilder': {
+      // 그룹 PV: 400만, 3명 이상의 6%(60만 PV) 달성자
       const sponsorOfRootSponsor = { id: 'A', pv: '20' };
       const sponsorOfRootSponsorNode = makingNode(
         sponsorOfRootSponsor.id,
@@ -78,7 +80,7 @@ export const makingLOSMapTree = (type) => {
       );
       nodes.push(sponsorOfRootSponsorNode);
 
-      const rootSponsor = { id: 'B', pv: '40' };
+      const rootSponsor = { id: 'B', pv: '30' };
       const rootSponsorEdge = makingEdge(
         sponsorOfRootSponsor.id,
         rootSponsor.id
@@ -93,15 +95,16 @@ export const makingLOSMapTree = (type) => {
       ];
       const group2 = [
         { id: 'G', pv: '30' },
-        { id: 'H', pv: '40' },
+        { id: 'H', pv: '30' },
         { id: 'I', pv: '30' },
         { id: 'J', pv: '20' },
+        { id: 'K', pv: '20' },
       ];
       const group3 = [
-        { id: 'K', pv: '20' },
         { id: 'L', pv: '30' },
-        { id: 'M', pv: '40' },
+        { id: 'M', pv: '30' },
         { id: 'N', pv: '30' },
+        { id: 'O', pv: '30' },
       ];
       const [mapNodes, mapEdges] = makingLOSMap(rootSponsor, [
         group1,

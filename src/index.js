@@ -6,7 +6,7 @@ cytoscape.use(dagre);
 
 import './style.css';
 
-import { makingFirstBonusChart, applyTargetBonus } from './bonus';
+import { applyTargetBonus } from './bonus';
 import { showMenu, hideMenu, getNewId } from './common';
 import {
   edgeWidth,
@@ -117,8 +117,6 @@ window.addEventListener('resize', function () {
     cy.fit();
   }, 200);
 });
-
-makingFirstBonusChart();
 
 function setFocus(cy, target_element) {
   target_element.style('background-color', nodeActiveColor);

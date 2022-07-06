@@ -1,26 +1,4 @@
-import { firstBonusData } from './data';
-
-export function makingFirstBonusChart() {
-  const firstBonusChartDiv = document.querySelector('.first-bonus-chart');
-
-  firstBonusData.forEach((bonusData) => {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('first-bonus-item');
-
-    let bonusTotal = document.createElement('div');
-    bonusTotal.innerText = `${bonusData.total}만PV`;
-    bonusTotal.classList.add('bonus-total');
-
-    let bonusPercentage = document.createElement('div');
-    bonusPercentage.innerText = `${bonusData.percentage}%`;
-    bonusTotal.classList.add('bonus-percentage');
-
-    wrapper.appendChild(bonusTotal);
-    wrapper.appendChild(bonusPercentage);
-
-    firstBonusChartDiv.appendChild(wrapper);
-  });
-}
+import { PV_BV_RATIO } from './constants';
 
 export function applyTargetBonus(cy, element) {
   if (cy == null || element == null) {
@@ -42,20 +20,21 @@ export function applyTargetBonus(cy, element) {
   const curSelDiv = document.querySelector('.cur-sel');
   curSelDiv.innerHTML = element.data('label');
 
-  const {totalPv, ratio, reward1st} = calc1stBonus(cy, element);
+  const { totalPv, ratio, reward1st } = calc1stBonus(cy, element);
   const curPvDiv = document.querySelector('.cur-pv');
   curPvDiv.innerHTML = `${totalPv} 만`;
   const curPaybackDiv = document.querySelector('.cur-payback');
   curPaybackDiv.innerHTML = `${ratio * 100} %`;
   const curReward1stDiv = document.querySelector('.cur-reward-1st');
   curReward1stDiv.innerHTML = `${reward1st.toFixed(1)} 만원`;
-  
+
   const reward2nd = calc2ndBonus(cy, element, totalPv, reward1st);
   const curReward2ndDiv = document.querySelector('.cur-reward-2nd');
   curReward2ndDiv.innerHTML = `${reward2nd.toFixed(1)} 만원`;
-  
+
   const curRewardDiv = document.querySelector('.cur-reward');
-  curRewardDiv.innerHTML = `${(reward1st + reward2nd).toFixed(1)} 만원`;
+  const totalReward = (reward1st + reward2nd) * PV_BV_RATIO;
+  curRewardDiv.innerHTML = `${totalReward.toFixed(2)} 만원`;
 }
 
 let tempPv = 0;
@@ -116,13 +95,11 @@ export function getChildrenNodes(cy, element) {
 
 function calc2ndBonus(cy, element, totalPv, reward1st) {
   // total PV가 400만 인가?
-  if (totalPv < 400)
-    return 0;
+  if (totalPv < 400) return 0;
 
   // 60만 pv 달성한 leg가 3개인가?
   const children = getChildrenNodes(cy, element);
-  if (children.length < 3)
-    return 0;
+  if (children.length < 3) return 0;
 
   let bFail = false;
   children.forEach(function (child) {
@@ -131,9 +108,7 @@ function calc2ndBonus(cy, element, totalPv, reward1st) {
     console.log(tempPv);
     if (tempPv < 60) bFail = true;
   });
-  if (bFail)
-    return 0;
+  if (bFail) return 0;
 
-  console.log("Bronze Builder!!");
   return reward1st * 0.3;
 }

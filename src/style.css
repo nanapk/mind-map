@@ -29,9 +29,9 @@ body {
   margin-bottom: 0px;
 }
 
-.bonus-total {
-  margin-right: 10px;
+.chart-label {
   color: gray;
+  margin-right: 10px;
 }
 
 .left-info {
@@ -177,7 +177,7 @@ body {
   margin: 10px 0px 0px 10px;
 }
 
-@media ( max-width: 720px ) {
+@media (max-width: 720px) {
   .first-bonus-chart {
     font-size: 12px;
     top: 10px;
