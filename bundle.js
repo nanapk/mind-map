@@ -13,8 +13,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bonus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(295);
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(297);
 /* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(298);
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(296);
-/* harmony import */ var _layout__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(299);
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(299);
+/* harmony import */ var _layout__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(300);
 /* harmony import */ var _layout__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_layout__WEBPACK_IMPORTED_MODULE_7__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -123,7 +123,6 @@ window.addEventListener('resize', function () {
     cy.fit();
   }, 200);
 });
-(0,_bonus__WEBPACK_IMPORTED_MODULE_3__.makingFirstBonusChart)();
 
 function setFocus(cy, target_element) {
   target_element.style('background-color', _style__WEBPACK_IMPORTED_MODULE_5__.nodeActiveColor);
@@ -17389,57 +17388,40 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "makingFirstBonusChart": () => /* binding */ makingFirstBonusChart,
 /* harmony export */   "applyTargetBonus": () => /* binding */ applyTargetBonus,
 /* harmony export */   "getChildrenNodes": () => /* binding */ getChildrenNodes
 /* harmony export */ });
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(296);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(296);
 
-function makingFirstBonusChart() {
-  var firstBonusChartDiv = document.querySelector('.first-bonus-chart');
-  _data__WEBPACK_IMPORTED_MODULE_0__.firstBonusData.forEach(function (bonusData) {
-    var wrapper = document.createElement('div');
-    wrapper.classList.add('first-bonus-item');
-    var bonusTotal = document.createElement('div');
-    bonusTotal.innerText = "".concat(bonusData.total, "\uB9CCPV");
-    bonusTotal.classList.add('bonus-total');
-    var bonusPercentage = document.createElement('div');
-    bonusPercentage.innerText = "".concat(bonusData.percentage, "%");
-    bonusTotal.classList.add('bonus-percentage');
-    wrapper.appendChild(bonusTotal);
-    wrapper.appendChild(bonusPercentage);
-    firstBonusChartDiv.appendChild(wrapper);
-  });
-}
 function applyTargetBonus(cy, element) {
+  var curSelDiv = document.querySelector('.cur-sel');
+  var curPvDiv = document.querySelector('.cur-pv');
+  var curPaybackDiv = document.querySelector('.cur-payback');
+  var curReward1stDiv = document.querySelector('.cur-reward-1st');
+  var curReward2ndDiv = document.querySelector('.cur-reward-2nd');
+  var curRewardDiv = document.querySelector('.cur-reward');
+
+  var show2ndReward = function show2ndReward() {
+    curReward2ndDiv.parentElement.classList.remove('hide');
+    curRewardDiv.parentElement.classList.remove('hide');
+  };
+
+  var hide2ndReward = function hide2ndReward() {
+    curReward2ndDiv.parentElement.classList.add('hide');
+    curRewardDiv.parentElement.classList.add('hide');
+  };
+
   if (cy == null || element == null) {
-    var _curSelDiv = document.querySelector('.cur-sel');
-
-    _curSelDiv.innerHTML = '없음';
-
-    var _curPvDiv = document.querySelector('.cur-pv');
-
-    _curPvDiv.innerHTML = '0 만';
-
-    var _curPaybackDiv = document.querySelector('.cur-payback');
-
-    _curPaybackDiv.innerHTML = '0 %';
-
-    var _curReward1stDiv = document.querySelector('.cur-reward-1st');
-
-    _curReward1stDiv.innerHTML = '0 만원';
-
-    var _curReward2ndDiv = document.querySelector('.cur-reward-2nd');
-
-    _curReward2ndDiv.innerHTML = '0 만원';
-
-    var _curRewardDiv = document.querySelector('.cur-reward');
-
-    _curRewardDiv.innerHTML = '0 만원';
+    curSelDiv.innerHTML = '없음';
+    curPvDiv.innerHTML = '0 만';
+    curPaybackDiv.innerHTML = '0 %';
+    curReward1stDiv.innerHTML = '0 만원';
+    curReward2ndDiv.innerHTML = '0 만원';
+    curRewardDiv.innerHTML = '0 만원';
+    hide2ndReward();
     return;
   }
 
-  var curSelDiv = document.querySelector('.cur-sel');
   curSelDiv.innerHTML = element.data('label');
 
   var _calc1stBonus = calc1stBonus(cy, element),
@@ -17447,17 +17429,21 @@ function applyTargetBonus(cy, element) {
       ratio = _calc1stBonus.ratio,
       reward1st = _calc1stBonus.reward1st;
 
-  var curPvDiv = document.querySelector('.cur-pv');
   curPvDiv.innerHTML = "".concat(totalPv, " \uB9CC");
-  var curPaybackDiv = document.querySelector('.cur-payback');
   curPaybackDiv.innerHTML = "".concat(ratio * 100, " %");
-  var curReward1stDiv = document.querySelector('.cur-reward-1st');
-  curReward1stDiv.innerHTML = "".concat(reward1st.toFixed(1), " \uB9CC\uC6D0");
+  curReward1stDiv.innerHTML = "".concat(reward1st.toFixed(2), " \uB9CC\uC6D0");
   var reward2nd = calc2ndBonus(cy, element, totalPv, reward1st);
-  var curReward2ndDiv = document.querySelector('.cur-reward-2nd');
-  curReward2ndDiv.innerHTML = "".concat(reward2nd.toFixed(1), " \uB9CC\uC6D0");
-  var curRewardDiv = document.querySelector('.cur-reward');
-  curRewardDiv.innerHTML = "".concat((reward1st + reward2nd).toFixed(1), " \uB9CC\uC6D0");
+
+  if (reward2nd) {
+    show2ndReward();
+    curReward2ndDiv.innerHTML = "".concat(reward2nd.toFixed(2), " \uB9CC\uC6D0");
+    var totalReward = reward1st + reward2nd;
+    curRewardDiv.innerHTML = "".concat(totalReward.toFixed(2), " \uB9CC\uC6D0");
+  } else {
+    hide2ndReward();
+    curReward2ndDiv.innerHTML = '0 만원';
+    curRewardDiv.innerHTML = '0 만원';
+  }
 }
 var tempPv = 0;
 
@@ -17466,7 +17452,8 @@ function calc1stBonus(cy, element) {
   calcTargetBonus(cy, element);
   var totalPv = tempPv;
   var ratio = getPercentByPV(totalPv);
-  var reward1st = calcTargetReward(cy, element, ratio * totalPv);
+  var total1Reward = ratio * totalPv * _constants__WEBPACK_IMPORTED_MODULE_0__.PV_BV_RATIO;
+  var reward1st = calcTargetReward(cy, element, total1Reward);
   return {
     totalPv: totalPv,
     ratio: ratio,
@@ -17497,7 +17484,8 @@ function calcTargetReward(cy, element, totalReward) {
     calcTargetBonus(cy, child);
     var childPv = tempPv;
     var childRatio = getPercentByPV(childPv);
-    totalReward -= childPv * childRatio;
+    var childTotalBonus = childPv * childRatio * _constants__WEBPACK_IMPORTED_MODULE_0__.PV_BV_RATIO;
+    totalReward -= childTotalBonus;
   });
   return totalReward;
 }
@@ -17523,11 +17511,9 @@ function calc2ndBonus(cy, element, totalPv, reward1st) {
   children.forEach(function (child) {
     tempPv = parseInt(child.data('pv'));
     calcTargetBonus(cy, child);
-    console.log(tempPv);
     if (tempPv < 60) bFail = true;
   });
   if (bFail) return 0;
-  console.log("Bronze Builder!!");
   return reward1st * 0.3;
 }
 
@@ -17538,235 +17524,9 @@ function calc2ndBonus(cy, element, totalPv, reward1st) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "firstBonusData": () => /* binding */ firstBonusData,
-/* harmony export */   "makingLOSMapTree": () => /* binding */ makingLOSMapTree
+/* harmony export */   "PV_BV_RATIO": () => /* binding */ PV_BV_RATIO
 /* harmony export */ });
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(297);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-var firstBonusData = [{
-  total: 20,
-  percentage: 3
-}, {
-  total: 60,
-  percentage: 6
-}, {
-  total: 120,
-  percentage: 9
-}, {
-  total: 240,
-  percentage: 12
-}, {
-  total: 400,
-  percentage: 15
-}, {
-  total: 680,
-  percentage: 18
-}, {
-  total: 1000,
-  percentage: 21
-}];
-var makingLOSMapTree = function makingLOSMapTree(type) {
-  var nodes = [];
-  var edges = [];
-
-  switch (type) {
-    case 'bronzeFoundation1':
-      {
-        var rootSponsor = {
-          id: 'A',
-          pv: '20'
-        };
-        var group = [{
-          id: 'B',
-          pv: '20'
-        }, {
-          id: 'C',
-          pv: '40'
-        }, {
-          id: 'D',
-          pv: '40'
-        }, {
-          id: 'E',
-          pv: '20'
-        }];
-
-        var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group]),
-            _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2),
-            mapNodes = _makingLOSMap2[0],
-            mapEdges = _makingLOSMap2[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(mapNodes));
-        edges.push.apply(edges, _toConsumableArray(mapEdges));
-        break;
-      }
-
-    case 'bronzeFoundation2':
-      {
-        var sponsorOfRootSponsor = {
-          id: 'A',
-          pv: '20'
-        };
-        var sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(sponsorOfRootSponsor.id, sponsorOfRootSponsor.pv);
-        nodes.push(sponsorOfRootSponsorNode);
-        var _rootSponsor = {
-          id: 'B',
-          pv: '20'
-        };
-        var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, _rootSponsor.id);
-        edges.push(rootSponsorEdge);
-        var group1 = [{
-          id: 'C',
-          pv: '20'
-        }, {
-          id: 'D',
-          pv: '20'
-        }];
-        var group2 = [{
-          id: 'E',
-          pv: '20'
-        }, {
-          id: 'F',
-          pv: '20'
-        }];
-        var group3 = [{
-          id: 'G',
-          pv: '20'
-        }, {
-          id: 'H',
-          pv: '20'
-        }];
-
-        var _makingLOSMap3 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor, [group1, group2, group3]),
-            _makingLOSMap4 = _slicedToArray(_makingLOSMap3, 2),
-            _mapNodes = _makingLOSMap4[0],
-            _mapEdges = _makingLOSMap4[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges));
-        break;
-      }
-
-    case 'bronzeBuilder':
-      {
-        var _sponsorOfRootSponsor = {
-          id: 'A',
-          pv: '20'
-        };
-
-        var _sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(_sponsorOfRootSponsor.id, _sponsorOfRootSponsor.pv);
-
-        nodes.push(_sponsorOfRootSponsorNode);
-        var _rootSponsor2 = {
-          id: 'B',
-          pv: '40'
-        };
-
-        var _rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(_sponsorOfRootSponsor.id, _rootSponsor2.id);
-
-        edges.push(_rootSponsorEdge);
-        var _group = [{
-          id: 'C',
-          pv: '30'
-        }, {
-          id: 'D',
-          pv: '30'
-        }, {
-          id: 'E',
-          pv: '30'
-        }, {
-          id: 'F',
-          pv: '30'
-        }];
-        var _group2 = [{
-          id: 'G',
-          pv: '30'
-        }, {
-          id: 'H',
-          pv: '40'
-        }, {
-          id: 'I',
-          pv: '30'
-        }, {
-          id: 'J',
-          pv: '20'
-        }];
-        var _group3 = [{
-          id: 'K',
-          pv: '50'
-        }, {
-          id: 'L',
-          pv: '30'
-        }, {
-          id: 'M',
-          pv: '40'
-        }, {
-          id: 'N',
-          pv: '30'
-        }];
-
-        var _makingLOSMap5 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor2, [_group, _group2, _group3]),
-            _makingLOSMap6 = _slicedToArray(_makingLOSMap5, 2),
-            _mapNodes2 = _makingLOSMap6[0],
-            _mapEdges2 = _makingLOSMap6[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes2));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges2));
-        break;
-      }
-
-    default:
-      {
-        var _rootSponsor3 = {
-          id: 'A',
-          pv: '20'
-        };
-        var _group4 = [{
-          id: 'B',
-          pv: '20'
-        }, {
-          id: 'C',
-          pv: '20'
-        }, {
-          id: 'D',
-          pv: '20'
-        }];
-
-        var _makingLOSMap7 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor3, [_group4]),
-            _makingLOSMap8 = _slicedToArray(_makingLOSMap7, 2),
-            _mapNodes3 = _makingLOSMap8[0],
-            _mapEdges3 = _makingLOSMap8[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes3));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges3));
-        break;
-      }
-  }
-
-  return {
-    nodes: nodes,
-    edges: edges
-  };
-};
+var PV_BV_RATIO = 1.73;
 
 /***/ }),
 /* 297 */
@@ -17946,6 +17706,248 @@ var successorsColor = '#1e90ff';
 
 /***/ }),
 /* 299 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "firstBonusData": () => /* binding */ firstBonusData,
+/* harmony export */   "makingLOSMapTree": () => /* binding */ makingLOSMapTree
+/* harmony export */ });
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(297);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var firstBonusData = [{
+  total: 20,
+  percentage: 3
+}, {
+  total: 60,
+  percentage: 6
+}, {
+  total: 120,
+  percentage: 9
+}, {
+  total: 240,
+  percentage: 12
+}, {
+  total: 400,
+  percentage: 15
+}, {
+  total: 680,
+  percentage: 18
+}, {
+  total: 1000,
+  percentage: 21
+}];
+var makingLOSMapTree = function makingLOSMapTree(type) {
+  var nodes = [];
+  var edges = [];
+
+  switch (type) {
+    case 'bronzeFoundation1':
+      {
+        // B.F: 그룹 PV 120만, 3명이상이 20만 PV를 달성해 3%의 1차 보너스를 받고 있을 경우
+        var rootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+        var group = [{
+          id: 'B',
+          pv: '30'
+        }, {
+          id: 'C',
+          pv: '30'
+        }, {
+          id: 'D',
+          pv: '30'
+        }, {
+          id: 'E',
+          pv: '30'
+        }];
+
+        var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group]),
+            _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2),
+            mapNodes = _makingLOSMap2[0],
+            mapEdges = _makingLOSMap2[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(mapNodes));
+        edges.push.apply(edges, _toConsumableArray(mapEdges));
+        break;
+      }
+
+    case 'bronzeFoundation2':
+      {
+        var sponsorOfRootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+        var sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(sponsorOfRootSponsor.id, sponsorOfRootSponsor.pv);
+        nodes.push(sponsorOfRootSponsorNode);
+        var _rootSponsor = {
+          id: 'B',
+          pv: '20'
+        };
+        var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, _rootSponsor.id);
+        edges.push(rootSponsorEdge);
+        var group1 = [{
+          id: 'C',
+          pv: '20'
+        }, {
+          id: 'D',
+          pv: '20'
+        }];
+        var group2 = [{
+          id: 'E',
+          pv: '20'
+        }, {
+          id: 'F',
+          pv: '20'
+        }];
+        var group3 = [{
+          id: 'G',
+          pv: '20'
+        }, {
+          id: 'H',
+          pv: '20'
+        }];
+
+        var _makingLOSMap3 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor, [group1, group2, group3]),
+            _makingLOSMap4 = _slicedToArray(_makingLOSMap3, 2),
+            _mapNodes = _makingLOSMap4[0],
+            _mapEdges = _makingLOSMap4[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges));
+        break;
+      }
+
+    case 'bronzeBuilder':
+      {
+        // 그룹 PV: 400만, 3명 이상의 6%(60만 PV) 달성자
+        var _sponsorOfRootSponsor = {
+          id: 'A',
+          pv: '20'
+        };
+
+        var _sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(_sponsorOfRootSponsor.id, _sponsorOfRootSponsor.pv);
+
+        nodes.push(_sponsorOfRootSponsorNode);
+        var _rootSponsor2 = {
+          id: 'B',
+          pv: '30'
+        };
+
+        var _rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(_sponsorOfRootSponsor.id, _rootSponsor2.id);
+
+        edges.push(_rootSponsorEdge);
+        var _group = [{
+          id: 'C',
+          pv: '30'
+        }, {
+          id: 'D',
+          pv: '30'
+        }, {
+          id: 'E',
+          pv: '30'
+        }, {
+          id: 'F',
+          pv: '30'
+        }];
+        var _group2 = [{
+          id: 'G',
+          pv: '30'
+        }, {
+          id: 'H',
+          pv: '30'
+        }, {
+          id: 'I',
+          pv: '30'
+        }, {
+          id: 'J',
+          pv: '20'
+        }, {
+          id: 'K',
+          pv: '20'
+        }];
+        var _group3 = [{
+          id: 'L',
+          pv: '30'
+        }, {
+          id: 'M',
+          pv: '30'
+        }, {
+          id: 'N',
+          pv: '30'
+        }, {
+          id: 'O',
+          pv: '30'
+        }];
+
+        var _makingLOSMap5 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor2, [_group, _group2, _group3]),
+            _makingLOSMap6 = _slicedToArray(_makingLOSMap5, 2),
+            _mapNodes2 = _makingLOSMap6[0],
+            _mapEdges2 = _makingLOSMap6[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes2));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges2));
+        break;
+      }
+
+    default:
+      {
+        var _rootSponsor3 = {
+          id: 'A',
+          pv: '20'
+        };
+        var _group4 = [{
+          id: 'B',
+          pv: '20'
+        }, {
+          id: 'C',
+          pv: '20'
+        }, {
+          id: 'D',
+          pv: '20'
+        }];
+
+        var _makingLOSMap7 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor3, [_group4]),
+            _makingLOSMap8 = _slicedToArray(_makingLOSMap7, 2),
+            _mapNodes3 = _makingLOSMap8[0],
+            _mapEdges3 = _makingLOSMap8[1];
+
+        nodes.push.apply(nodes, _toConsumableArray(_mapNodes3));
+        edges.push.apply(edges, _toConsumableArray(_mapEdges3));
+        break;
+      }
+  }
+
+  return {
+    nodes: nodes,
+    edges: edges
+  };
+};
+
+/***/ }),
+/* 300 */
 /***/ (() => {
 
 var dagreLayout = {
