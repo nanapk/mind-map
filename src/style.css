@@ -25,6 +25,10 @@ body {
   margin-bottom: 4px;
 }
 
+.first-bonus-item.hide {
+  display: none;
+}
+
 .first-bonus-item:last-child {
   margin-bottom: 0px;
 }
