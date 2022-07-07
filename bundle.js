@@ -17804,7 +17804,7 @@ var makingLOSMapTree = function makingLOSMapTree(type) {
         nodes.push(sponsorOfRootSponsorNode);
         var _rootSponsor = {
           id: 'B',
-          pv: '20'
+          pv: '0'
         };
         var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, _rootSponsor.id);
         edges.push(rootSponsorEdge);
