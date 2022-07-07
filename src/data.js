@@ -40,7 +40,7 @@ export const makingLOSMapTree = (type) => {
       );
       nodes.push(sponsorOfRootSponsorNode);
 
-      const rootSponsor = { id: 'B', pv: '20' };
+      const rootSponsor = { id: 'B', pv: '0' };
       const rootSponsorEdge = makingEdge(
         sponsorOfRootSponsor.id,
         rootSponsor.id
