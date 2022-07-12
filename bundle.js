@@ -44,7 +44,7 @@ function resetCurSel() {
 
 var cy = cytoscape__WEBPACK_IMPORTED_MODULE_0___default()({
   container: document.getElementById('cy'),
-  elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('default'),
+  elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapOldTree)('default'),
   style: [{
     selector: 'node',
     style: {
@@ -215,19 +215,23 @@ changeElementsButtons.forEach(function (el) {
 
     if (type === 'bronze-foundation-1') {
       cy.json({
-        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeFoundation1')
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapOldTree)('bronzeFoundation1')
       });
     } else if (type === 'bronze-foundation-2') {
       cy.json({
-        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeFoundation2')
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapOldTree)('bronzeFoundation2')
       });
-    } else if (type === 'bronze-builder') {
+    } else if (type === 'bronze-builder-1') {
       cy.json({
-        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('bronzeBuilder')
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapOldTree)('bronzeBuilder1')
+      });
+    } else if (type === 'bronze-builder-2') {
+      cy.json({
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapOldTree)('bronzeBuilder2')
       });
     } else if (type === 'default') {
       cy.json({
-        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapTree)('default')
+        elements: (0,_data__WEBPACK_IMPORTED_MODULE_6__.makingLOSMapOldTree)('default')
       });
     }
 
@@ -17539,8 +17543,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "hideElement": () => /* binding */ hideElement,
 /* harmony export */   "showMenu": () => /* binding */ showMenu,
 /* harmony export */   "hideMenu": () => /* binding */ hideMenu,
-/* harmony export */   "makingEdge": () => /* binding */ makingEdge,
-/* harmony export */   "makingNode": () => /* binding */ makingNode,
 /* harmony export */   "makingLOSMap": () => /* binding */ makingLOSMap,
 /* harmony export */   "getNewId": () => /* binding */ getNewId
 /* harmony export */ });
@@ -17548,21 +17550,13 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function showElement(className) {
   document.querySelector(".".concat(className)).classList.add('show');
@@ -17580,6 +17574,7 @@ function hideMenu() {
   hideElement('gray-background');
   hideElement('menu');
 }
+
 function makingEdge(source, target) {
   return {
     data: {
@@ -17589,55 +17584,39 @@ function makingEdge(source, target) {
     }
   };
 }
-function makingNode(id, pv) {
+
+function makingNode(node) {
+  var id = node.id,
+      pv = node.pv,
+      index = node.index;
   return {
     data: {
       id: id,
       pv: pv,
+      index: index,
       label: "".concat(id, "(").concat(pv, ")")
     }
   };
 }
 
-function makingGroup(group) {
-  var sponsor = Object.assign(group[0]);
-  var partners = group.slice(1);
-  var groupNodes = group.map(function (member) {
-    return makingNode(member.id, member.pv);
-  });
-  var groupEdges = partners.map(function (member) {
-    return makingEdge(sponsor.id, member.id);
-  });
-  return [groupNodes, groupEdges, sponsor];
-}
-
-function connectingSponsorsAndRootSponsor(sponsors, rootSponsor) {
-  return sponsors.map(function (sponsor) {
-    return makingEdge(rootSponsor.data.id, sponsor.id);
+function makingLeg(group) {
+  var parent = group.parent,
+      children = group.children;
+  return children.map(function (child) {
+    return makingEdge(parent, child);
   });
 }
 
-function makingLOSMap(root, groups) {
-  var rootSponsorNode = makingNode(root.id, root.pv);
-  var nodes = [rootSponsorNode];
-  var edges = [];
-  var sponsorGroup = [];
-
-  for (var i = 0; i < groups.length; i++) {
-    var _makingGroup = makingGroup(groups[i]),
-        _makingGroup2 = _slicedToArray(_makingGroup, 3),
-        groupNodes = _makingGroup2[0],
-        groupEdges = _makingGroup2[1],
-        sponsor = _makingGroup2[2];
-
-    nodes.push.apply(nodes, _toConsumableArray(groupNodes));
-    edges.push.apply(edges, _toConsumableArray(groupEdges));
-    sponsorGroup.push(sponsor);
-  }
-
-  var sponsorEdges = connectingSponsorsAndRootSponsor(sponsorGroup, rootSponsorNode);
-  edges.push.apply(edges, _toConsumableArray(sponsorEdges));
-  return [nodes, edges];
+function makingLOSMap(members, groups) {
+  var memberNodes = members.map(function (member) {
+    return makingNode(member);
+  });
+  var groupLegs = groups.reduce(function (prev, cur) {
+    var leg = makingLeg(cur);
+    prev.push.apply(prev, _toConsumableArray(leg));
+    return prev;
+  }, []);
+  return [memberNodes, groupLegs];
 }
 document.querySelector('.menu-button[action="close"]').addEventListener('click', function () {
   hideMenu();
@@ -17669,9 +17648,9 @@ function getNewId(cy) {
   }
 
   if (!find) {
-    for (var _i2 = 0; _i2 < smallASCIIArray.length; _i2++) {
-      if (!nodesASCII.includes(smallASCIIArray[_i2])) {
-        resultASCII = smallASCIIArray[_i2];
+    for (var _i = 0; _i < smallASCIIArray.length; _i++) {
+      if (!nodesASCII.includes(smallASCIIArray[_i])) {
+        resultASCII = smallASCIIArray[_i];
         find = true;
         break;
       }
@@ -17712,7 +17691,7 @@ var successorsColor = '#1e90ff';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "firstBonusData": () => /* binding */ firstBonusData,
-/* harmony export */   "makingLOSMapTree": () => /* binding */ makingLOSMapTree
+/* harmony export */   "makingLOSMapOldTree": () => /* binding */ makingLOSMapOldTree
 /* harmony export */ });
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(297);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -17758,188 +17737,325 @@ var firstBonusData = [{
   total: 1000,
   percentage: 21
 }];
-var makingLOSMapTree = function makingLOSMapTree(type) {
+var makingLOSMapOldTree = function makingLOSMapOldTree(type) {
   var nodes = [];
   var edges = [];
+  var members = [];
+  var groups = [];
+  var memberNodes = [];
+  var groupLegs = [];
 
   switch (type) {
     case 'bronzeFoundation1':
       {
         // B.F: 그룹 PV 120만, 3명이상이 20만 PV를 달성해 3%의 1차 보너스를 받고 있을 경우
-        var rootSponsor = {
+        members = [{
+          index: 0,
           id: 'A',
           pv: '20'
-        };
-        var group = [{
+        }, {
+          index: 1,
           id: 'B',
           pv: '30'
         }, {
+          index: 2,
           id: 'C',
           pv: '30'
         }, {
+          index: 3,
           id: 'D',
           pv: '30'
         }, {
+          index: 4,
           id: 'E',
           pv: '30'
         }];
-
-        var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(rootSponsor, [group]),
-            _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2),
-            mapNodes = _makingLOSMap2[0],
-            mapEdges = _makingLOSMap2[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(mapNodes));
-        edges.push.apply(edges, _toConsumableArray(mapEdges));
+        groups = [{
+          parent: members[0].id,
+          children: [members[1].id]
+        }, {
+          parent: members[1].id,
+          children: [members[2].id, members[3].id, members[4].id]
+        }];
         break;
       }
 
     case 'bronzeFoundation2':
       {
-        var sponsorOfRootSponsor = {
+        members = [{
+          index: 0,
           id: 'A',
           pv: '20'
-        };
-        var sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(sponsorOfRootSponsor.id, sponsorOfRootSponsor.pv);
-        nodes.push(sponsorOfRootSponsorNode);
-        var _rootSponsor = {
+        }, {
+          index: 1,
           id: 'B',
           pv: '0'
-        };
-        var rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(sponsorOfRootSponsor.id, _rootSponsor.id);
-        edges.push(rootSponsorEdge);
-        var group1 = [{
+        }, {
+          index: 2,
           id: 'C',
           pv: '20'
         }, {
+          index: 3,
           id: 'D',
           pv: '20'
-        }];
-        var group2 = [{
+        }, {
+          index: 4,
           id: 'E',
           pv: '20'
         }, {
+          index: 5,
           id: 'F',
           pv: '20'
-        }];
-        var group3 = [{
+        }, {
+          index: 6,
           id: 'G',
           pv: '20'
         }, {
+          index: 7,
           id: 'H',
           pv: '20'
         }];
-
-        var _makingLOSMap3 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor, [group1, group2, group3]),
-            _makingLOSMap4 = _slicedToArray(_makingLOSMap3, 2),
-            _mapNodes = _makingLOSMap4[0],
-            _mapEdges = _makingLOSMap4[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges));
+        groups = [{
+          parent: members[0].id,
+          children: [members[1].id]
+        }, {
+          parent: members[1].id,
+          children: [members[2].id, members[3].id, members[4].id]
+        }, {
+          parent: members[2].id,
+          children: [members[5].id]
+        }, {
+          parent: members[3].id,
+          children: [members[6].id]
+        }, {
+          parent: members[4].id,
+          children: [members[7].id]
+        }];
         break;
       }
 
-    case 'bronzeBuilder':
+    case 'bronzeBuilder1':
       {
         // 그룹 PV: 400만, 3명 이상의 6%(60만 PV) 달성자
-        var _sponsorOfRootSponsor = {
+        members = [{
+          index: 0,
           id: 'A',
           pv: '20'
-        };
-
-        var _sponsorOfRootSponsorNode = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingNode)(_sponsorOfRootSponsor.id, _sponsorOfRootSponsor.pv);
-
-        nodes.push(_sponsorOfRootSponsorNode);
-        var _rootSponsor2 = {
+        }, {
+          index: 1,
           id: 'B',
           pv: '30'
-        };
-
-        var _rootSponsorEdge = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingEdge)(_sponsorOfRootSponsor.id, _rootSponsor2.id);
-
-        edges.push(_rootSponsorEdge);
-        var _group = [{
+        }, {
+          index: 2,
           id: 'C',
           pv: '30'
         }, {
+          index: 3,
           id: 'D',
           pv: '30'
         }, {
+          index: 4,
           id: 'E',
           pv: '30'
         }, {
+          index: 5,
           id: 'F',
           pv: '30'
-        }];
-        var _group2 = [{
+        }, {
+          index: 6,
           id: 'G',
           pv: '30'
         }, {
+          index: 7,
           id: 'H',
           pv: '30'
         }, {
+          index: 8,
           id: 'I',
           pv: '30'
         }, {
+          index: 9,
           id: 'J',
           pv: '20'
         }, {
+          index: 10,
           id: 'K',
           pv: '20'
-        }];
-        var _group3 = [{
+        }, {
+          index: 11,
           id: 'L',
           pv: '30'
         }, {
+          index: 12,
           id: 'M',
           pv: '30'
         }, {
+          index: 13,
           id: 'N',
           pv: '30'
         }, {
+          index: 14,
           id: 'O',
           pv: '30'
         }];
+        groups = [{
+          parent: members[0].id,
+          children: [members[1].id]
+        }, {
+          parent: members[1].id,
+          children: [members[2].id, members[3].id, members[4].id]
+        }, {
+          parent: members[2].id,
+          children: [members[5].id, members[6].id, members[7].id]
+        }, {
+          parent: members[3].id,
+          children: [members[8].id, members[9].id, members[10].id, members[11].id]
+        }, {
+          parent: members[4].id,
+          children: [members[12].id, members[13].id, members[14].id]
+        }];
+        break;
+      }
 
-        var _makingLOSMap5 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor2, [_group, _group2, _group3]),
-            _makingLOSMap6 = _slicedToArray(_makingLOSMap5, 2),
-            _mapNodes2 = _makingLOSMap6[0],
-            _mapEdges2 = _makingLOSMap6[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes2));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges2));
+    case 'bronzeBuilder2':
+      {
+        // 그룹 PV: 400만, 3명 이상의 6%(60만 PV) 달성자
+        members = [{
+          index: 0,
+          id: 'A',
+          pv: '20'
+        }, {
+          index: 1,
+          id: 'B',
+          pv: '30'
+        }, {
+          index: 2,
+          id: 'C',
+          pv: '20'
+        }, {
+          index: 3,
+          id: 'D',
+          pv: '20'
+        }, {
+          index: 4,
+          id: 'E',
+          pv: '20'
+        }, {
+          index: 5,
+          id: 'F',
+          pv: '20'
+        }, {
+          index: 6,
+          id: 'G',
+          pv: '20'
+        }, {
+          index: 7,
+          id: 'H',
+          pv: '20'
+        }, {
+          index: 8,
+          id: 'I',
+          pv: '30'
+        }, {
+          index: 9,
+          id: 'J',
+          pv: '20'
+        }, {
+          index: 10,
+          id: 'K',
+          pv: '20'
+        }, {
+          index: 11,
+          id: 'L',
+          pv: '30'
+        }, {
+          index: 12,
+          id: 'M',
+          pv: '30'
+        }, {
+          index: 13,
+          id: 'N',
+          pv: '30'
+        }, {
+          index: 14,
+          id: 'O',
+          pv: '30'
+        }, {
+          index: 15,
+          id: 'P',
+          pv: '20'
+        }, {
+          index: 16,
+          id: 'Q',
+          pv: '20'
+        }, {
+          index: 17,
+          id: 'R',
+          pv: '20'
+        }];
+        groups = [{
+          parent: members[0].id,
+          children: [members[1].id]
+        }, {
+          parent: members[1].id,
+          children: [members[2].id, members[3].id, members[4].id]
+        }, {
+          parent: members[2].id,
+          children: [members[5].id, members[6].id, members[7].id]
+        }, {
+          parent: members[3].id,
+          children: [members[8].id, members[9].id, members[10].id]
+        }, {
+          parent: members[4].id,
+          children: [members[11].id, members[12].id]
+        }, {
+          parent: members[5].id,
+          children: [members[13].id, members[14].id]
+        }, {
+          parent: members[13].id,
+          children: [members[15].id, members[16].id, members[17].id]
+        }];
         break;
       }
 
     default:
       {
-        var _rootSponsor3 = {
+        members = [{
+          index: 0,
           id: 'A',
           pv: '20'
-        };
-        var _group4 = [{
+        }, {
+          index: 1,
           id: 'B',
           pv: '20'
         }, {
+          index: 2,
           id: 'C',
           pv: '20'
         }, {
+          index: 3,
           id: 'D',
           pv: '20'
         }];
-
-        var _makingLOSMap7 = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(_rootSponsor3, [_group4]),
-            _makingLOSMap8 = _slicedToArray(_makingLOSMap7, 2),
-            _mapNodes3 = _makingLOSMap8[0],
-            _mapEdges3 = _makingLOSMap8[1];
-
-        nodes.push.apply(nodes, _toConsumableArray(_mapNodes3));
-        edges.push.apply(edges, _toConsumableArray(_mapEdges3));
+        groups = [{
+          parent: members[0].id,
+          children: [members[1].id]
+        }, {
+          parent: members[1].id,
+          children: [members[2].id, members[3].id]
+        }];
         break;
       }
   }
 
+  var _makingLOSMap = (0,_common__WEBPACK_IMPORTED_MODULE_0__.makingLOSMap)(members, groups);
+
+  var _makingLOSMap2 = _slicedToArray(_makingLOSMap, 2);
+
+  memberNodes = _makingLOSMap2[0];
+  groupLegs = _makingLOSMap2[1];
+  nodes.push.apply(nodes, _toConsumableArray(memberNodes));
+  edges.push.apply(edges, _toConsumableArray(groupLegs));
   return {
     nodes: nodes,
     edges: edges
