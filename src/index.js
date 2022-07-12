@@ -16,7 +16,7 @@ import {
   nodeActiveColor,
   successorsColor,
 } from './style';
-import { makingLOSMapTree } from './data';
+import { makingLOSMapOldTree } from './data';
 import { dagreLayout } from './layout';
 
 var curSel = null;
@@ -31,7 +31,7 @@ function resetCurSel() {
 
 var cy = cytoscape({
   container: document.getElementById('cy'),
-  elements: makingLOSMapTree('default'),
+  elements: makingLOSMapOldTree('default'),
   style: [
     {
       selector: 'node',
@@ -215,13 +215,15 @@ changeElementsButtons.forEach((el) => {
     const type = this.getAttribute('type');
 
     if (type === 'bronze-foundation-1') {
-      cy.json({ elements: makingLOSMapTree('bronzeFoundation1') });
+      cy.json({ elements: makingLOSMapOldTree('bronzeFoundation1') });
     } else if (type === 'bronze-foundation-2') {
-      cy.json({ elements: makingLOSMapTree('bronzeFoundation2') });
-    } else if (type === 'bronze-builder') {
-      cy.json({ elements: makingLOSMapTree('bronzeBuilder') });
+      cy.json({ elements: makingLOSMapOldTree('bronzeFoundation2') });
+    } else if (type === 'bronze-builder-1') {
+      cy.json({ elements: makingLOSMapOldTree('bronzeBuilder1') });
+    } else if (type === 'bronze-builder-2') {
+      cy.json({ elements: makingLOSMapOldTree('bronzeBuilder2') });
     } else if (type === 'default') {
-      cy.json({ elements: makingLOSMapTree('default') });
+      cy.json({ elements: makingLOSMapOldTree('default') });
     }
     cy.layout({
       name: 'dagre',
