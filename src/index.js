@@ -4,7 +4,8 @@ import dagre from 'cytoscape-dagre';
 
 cytoscape.use(dagre);
 
-import './style.css';
+import './style.scss';
+import './toggle.scss';
 
 import { applyTargetBonus } from './bonus';
 import { showMenu, hideMenu, getNewId } from './common';
