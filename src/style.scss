@@ -8,6 +8,10 @@ body {
   margin: 0;
 }
 
+.hide {
+  display: none;
+}
+
 .first-bonus-chart {
   padding: 10px;
   position: absolute;
@@ -23,14 +27,14 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 4px;
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
 }
 
 .first-bonus-item.hide {
   display: none;
-}
-
-.first-bonus-item:last-child {
-  margin-bottom: 0px;
 }
 
 .chart-label {
@@ -160,20 +164,20 @@ body {
   text-align: center;
   white-space: nowrap;
   user-select: none;
-}
 
-.utility-button[action='change-elements'] {
-  background-color: #808080;
-  color: white;
+  &[action='change-elements'] {
+    background-color: #808080;
+    color: white;
+  }
 }
 
 .left-button {
   margin-bottom: 10px;
   display: flex;
-}
 
-.left-button:last-child {
-  margin-bottom: 0px;
+  &:last-child {
+    margin-bottom: 0px;
+  }
 }
 
 .bottom-button {

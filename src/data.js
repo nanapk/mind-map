@@ -10,7 +10,7 @@ export const firstBonusData = [
   { total: 1000, percentage: 21 },
 ];
 
-export const makingLOSMapOldTree = (type) => {
+export const makingLOSMapTree = (type) => {
   let nodes = [];
   let edges = [];
   let members = [];
@@ -185,7 +185,7 @@ export const makingLOSMapOldTree = (type) => {
       break;
     }
 
-    default: {
+    case 'oneOneTwo': {
       members = [
         { index: 0, id: 'A', pv: '20' },
         { index: 1, id: 'B', pv: '20' },
@@ -201,6 +201,31 @@ export const makingLOSMapOldTree = (type) => {
         {
           parent: members[1].id,
           children: [members[2].id, members[3].id],
+        },
+      ];
+      break;
+    }
+
+    case 'silverPin': {
+      members = [
+        { index: 0, id: 'A', pv: '20' },
+        { index: 1, id: 'B', pv: '200' },
+        { index: 2, id: 'C', pv: '200' },
+        { index: 3, id: 'D', pv: '200' },
+        { index: 4, id: 'E', pv: '200' },
+        { index: 5, id: 'F', pv: '200' },
+      ];
+
+      groups = [
+        {
+          parent: members[0].id,
+          children: [
+            members[1].id,
+            members[2].id,
+            members[3].id,
+            members[4].id,
+            members[5].id,
+          ],
         },
       ];
       break;

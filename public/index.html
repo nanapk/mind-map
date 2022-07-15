@@ -15,7 +15,7 @@
 
   <body>
     <div id="cy"></div>
-    <div class="first-bonus-chart">
+    <div class="first-bonus-chart" condition="under-1000">
       <div class="first-bonus-item">
         <div class="chart-label">20만PV</div>
         <div class="bonus-percentage">3%</div>
@@ -94,11 +94,11 @@
         <div class="menu-button" action="edit-pv">확인</div>
       </div>
     </div>
-    <div>
+    <div class="utility-button-wrapper" condition="under-1000">
       <div
         class="utility-button bottom-button"
         action="change-elements"
-        type="default"
+        type="one-one-two"
       >
         1 1 2
       </div>
@@ -130,6 +130,14 @@
       >
         브론즈 빌더 2
       </div>
+    </div>
+    <div class="utility-button-wrapper hide" condition="over-1000">
+      <div
+        class="utility-button bottom-button"
+        action="change-elements"
+        type="silver-pin"
+      >
+      S.P
     </div>
   </body>
 </html>

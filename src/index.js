@@ -1,8 +1,9 @@
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
-// import coseBilkent from 'cytoscape-cose-bilkent';
+import coseBilkent from 'cytoscape-cose-bilkent';
 
 cytoscape.use(dagre);
+cytoscape.use(coseBilkent);
 
 import './style.scss';
 import './toggle.scss';
@@ -17,8 +18,9 @@ import {
   nodeActiveColor,
   successorsColor,
 } from './style';
-import { makingLOSMapOldTree } from './data';
+import { makingLOSMapTree } from './data';
 import { dagreLayout } from './layout';
+import { SILVER_PIN, ONE_ONE_TWO } from './constants';
 
 var curSel = null;
 
@@ -32,7 +34,7 @@ function resetCurSel() {
 
 var cy = cytoscape({
   container: document.getElementById('cy'),
-  elements: makingLOSMapOldTree('default'),
+  elements: makingLOSMapTree('oneOneTwo'),
   style: [
     {
       selector: 'node',
@@ -216,15 +218,15 @@ changeElementsButtons.forEach((el) => {
     const type = this.getAttribute('type');
 
     if (type === 'bronze-foundation-1') {
-      cy.json({ elements: makingLOSMapOldTree('bronzeFoundation1') });
+      cy.json({ elements: makingLOSMapTree('bronzeFoundation1') });
     } else if (type === 'bronze-foundation-2') {
-      cy.json({ elements: makingLOSMapOldTree('bronzeFoundation2') });
+      cy.json({ elements: makingLOSMapTree('bronzeFoundation2') });
     } else if (type === 'bronze-builder-1') {
-      cy.json({ elements: makingLOSMapOldTree('bronzeBuilder1') });
+      cy.json({ elements: makingLOSMapTree('bronzeBuilder1') });
     } else if (type === 'bronze-builder-2') {
-      cy.json({ elements: makingLOSMapOldTree('bronzeBuilder2') });
-    } else if (type === 'default') {
-      cy.json({ elements: makingLOSMapOldTree('default') });
+      cy.json({ elements: makingLOSMapTree('bronzeBuilder2') });
+    } else if (type === 'one-one-two') {
+      cy.json({ elements: makingLOSMapTree('oneOneTwo') });
     }
     cy.layout({
       name: 'dagre',
@@ -232,4 +234,37 @@ changeElementsButtons.forEach((el) => {
     }).run();
     resetCurSel();
   };
+});
+
+const toggleButton = document.querySelector('#toggle-button');
+
+const underThousandElements = document.querySelectorAll(
+  '[condition="under-1000"]'
+);
+
+const overThousandElements = document.querySelectorAll(
+  '[condition="over-1000"]'
+);
+
+toggleButton.addEventListener('change', function (e) {
+  const checked = e.target.checked;
+  if (checked) {
+    underThousandElements.forEach((element) => element.classList.add('hide'));
+    overThousandElements.forEach((element) => element.classList.remove('hide'));
+    cy.json({ elements: makingLOSMapTree(SILVER_PIN) });
+    cy.layout({
+      name: 'cose-bilkent',
+      // ...dagreLayout,
+    }).run();
+  } else {
+    underThousandElements.forEach((element) =>
+      element.classList.remove('hide')
+    );
+    overThousandElements.forEach((element) => element.classList.add('hide'));
+    cy.json({ elements: makingLOSMapTree(ONE_ONE_TWO) });
+    cy.layout({
+      name: 'dagre',
+      ...dagreLayout,
+    }).run();
+  }
 });
