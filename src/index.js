@@ -9,7 +9,7 @@ import './style.scss';
 import './toggle.scss';
 
 import { applyTargetBonus } from './bonus';
-import { showMenu, hideMenu, getNewId } from './common';
+import { showMenu, hideMenu, getNewId, toggleOverThousand } from './common';
 import {
   edgeWidth,
   arrowScale,
@@ -20,7 +20,6 @@ import {
 } from './style';
 import { makingLOSMapTree } from './data';
 import { dagreLayout } from './layout';
-import { SILVER_PIN, ONE_ONE_TWO } from './constants';
 
 var curSel = null;
 
@@ -237,34 +236,7 @@ changeElementsButtons.forEach((el) => {
 });
 
 const toggleButton = document.querySelector('#toggle-button');
-
-const underThousandElements = document.querySelectorAll(
-  '[condition="under-1000"]'
-);
-
-const overThousandElements = document.querySelectorAll(
-  '[condition="over-1000"]'
-);
-
 toggleButton.addEventListener('change', function (e) {
-  const checked = e.target.checked;
-  if (checked) {
-    underThousandElements.forEach((element) => element.classList.add('hide'));
-    overThousandElements.forEach((element) => element.classList.remove('hide'));
-    cy.json({ elements: makingLOSMapTree(SILVER_PIN) });
-    cy.layout({
-      name: 'cose-bilkent',
-      // ...dagreLayout,
-    }).run();
-  } else {
-    underThousandElements.forEach((element) =>
-      element.classList.remove('hide')
-    );
-    overThousandElements.forEach((element) => element.classList.add('hide'));
-    cy.json({ elements: makingLOSMapTree(ONE_ONE_TWO) });
-    cy.layout({
-      name: 'dagre',
-      ...dagreLayout,
-    }).run();
-  }
+  resetCurSel();
+  toggleOverThousand(cy, e.target);
 });

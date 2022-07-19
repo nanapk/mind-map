@@ -1,3 +1,7 @@
+import { SILVER_PIN, ONE_ONE_TWO } from './constants';
+import { makingLOSMapTree } from './data';
+import { dagreLayout } from './layout';
+
 export function showElement(className) {
   document.querySelector(`.${className}`).classList.add('show');
   document.querySelector(`.${className}`).classList.remove('hide');
@@ -103,4 +107,34 @@ export function getNewId(cy) {
 
   if (find) return String.fromCharCode(resultASCII);
   else return '';
+}
+
+export function toggleOverThousand(cy, toggleButton) {
+  const underThousandElements = document.querySelectorAll(
+    '[condition="under-1000"]'
+  );
+
+  const overThousandElements = document.querySelectorAll(
+    '[condition="over-1000"]'
+  );
+
+  const checked = toggleButton.checked;
+  if (checked) {
+    underThousandElements.forEach((element) => element.classList.add('hide'));
+    overThousandElements.forEach((element) => element.classList.remove('hide'));
+    cy.json({ elements: makingLOSMapTree(SILVER_PIN) });
+    cy.layout({
+      name: 'cose-bilkent',
+    }).run();
+  } else {
+    underThousandElements.forEach((element) =>
+      element.classList.remove('hide')
+    );
+    overThousandElements.forEach((element) => element.classList.add('hide'));
+    cy.json({ elements: makingLOSMapTree(ONE_ONE_TWO) });
+    cy.layout({
+      name: 'dagre',
+      ...dagreLayout,
+    }).run();
+  }
 }
